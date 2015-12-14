@@ -1,2 +1,3 @@
 # files_zenodo
-Zenodo integrataion for ownCloud
+Zenodo integration for ownCloud
+

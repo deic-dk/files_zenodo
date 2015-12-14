@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<info>
+    <id>files_zenodo</id>
+    <name>Files Zenodo</name>
+    <description>Integration with Zenodo (zenodo.org)</description>
+    <licence>AGPL</licence>
+    <author>Lars Næsbye Christensen</author>
+    <version>1.0</version>
+    <website>https://github.com/deic-dk/files_zenodo</website>
+    <bugs>https://github.com/deic-dk/files_zenodo/issues</bugs>
+    <repository type="git">http://github.com/deic-dk/files_zenodo.git</repository>
+    <documentation>
+        <user>https://github.com/deic-dk/files_zenodo/wiki</user>
+        <admin>https://github.com/deic-dk/files_zenodo/wiki</admin>
+    </documentation>
+    <requiremin>7</requiremin>
+    <category>tools</category>
+    <types>
+        <filesystem/>
+    </types>
+</info>
+
