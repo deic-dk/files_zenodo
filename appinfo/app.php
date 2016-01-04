@@ -19,7 +19,7 @@
  */
 
 // Load our fileactions script
-//if (\OCP\User::isLoggedIn()) {
-//    \OCP\Util::addScript('files_zenodo', 'fileactions');
-//}
+if (\OCP\User::isLoggedIn()) {
+    \OCP\Util::addScript('files_zenodo', 'fileactions');
+}
 
