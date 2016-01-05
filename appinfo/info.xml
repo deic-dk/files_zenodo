@@ -2,7 +2,7 @@
 <info>
     <id>files_zenodo</id>
     <name>Files Zenodo</name>
-    <description>Integration with Zenodo (zenodo.org)</description>
+    <description>Upload to Zenodo (zenodo.org)</description>
     <licence>AGPL</licence>
     <author>Lars Næsbye Christensen</author>
     <version>1.0</version>

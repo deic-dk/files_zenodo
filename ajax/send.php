@@ -21,11 +21,20 @@
 OCP\JSON::checkLoggedIn();
 
 if (OCP\App::isEnabled('files_zenodo')) {
+
+$access_token = "accesstoken"; // dummy;
+
+// $success = false;
+
+r =  http_get ("https://zenodo.org/api/deposit/depositions", array("timeout"=>1), $info);
     
-    if ($success) {
-        OCP\JSON::success();
-    } else {
+//    if ($success) 
+{
+        OCP\JSON::success($info);
+    } 
+
+/* else {
         OCP\JSON::error();
     }
-}
+}*/
 

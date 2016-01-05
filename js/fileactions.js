@@ -16,4 +16,39 @@
  *                                                                                                                                  
  */  
 
+        function files_zenodo_send (filename, context) {
+            var dir = context.dir || context.fileList.getCurrentDirectory();
+            $.ajax(OC.linkTo('files_zenodo', 'ajax/send.php'), {
+                type: 'POST',
+                data: {
+                    filename: filename,
+                    dir: dir
+                },
+                dataType: 'json',
+                success: function(s) {
+                    if (s.status == "success") {
+                       alert(s);
+
+                   } else {
+                        alert('Could not send.');
+                    }
+                },
+                error: function(s) {
+                    //alert('An error occurred.');
+                    alert(s);
+
+                },
+        });
+}
+
+$(document).ready(function() {
+    if (typeof FileActions !== 'undefined') {
+
+        FileActions.register('all', t('files_zenodo','to Zenodo'), OC.PERMISSION_READ, '',
+            function(filename, context) {
+                files_zenodo_send(filename, context)
+            });
+            
+    }
+});
 
