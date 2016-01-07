@@ -26,17 +26,11 @@
                 },
                 dataType: 'json',
                 success: function(s) {
-                    if (s.status == "success") {
-                       alert(s);
+                       alert(JSON.stringify(s));
 
-                   } else {
-                        alert('Could not send.');
-                    }
                 },
                 error: function(s) {
-                    //alert('An error occurred.');
-                    alert(s);
-
+                    alert(JSON.stringify(s));
                 },
         });
 }
