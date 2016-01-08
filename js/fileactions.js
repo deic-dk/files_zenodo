@@ -26,12 +26,12 @@
                 },
                 dataType: 'json',
                 success: function(s) {
-                       alert(JSON.stringify(s));
+                   alert(JSON.stringify(s));
 
                 },
                 error: function(s) {
-                    alert(JSON.stringify(s));
-                },
+                   alert('error ' + JSON.stringify(s));
+                }
         });
 }
 

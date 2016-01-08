@@ -22,20 +22,18 @@ OCP\JSON::checkLoggedIn();
 
 if (OCP\App::isEnabled('files_zenodo')) {
 
-$access_token = "accesstoken"; // dummy until we create the real deal;
+$access_token = ""; // here we should add the custom access token
 
-$success = true;
+$url = "https://zenodo.org/api/deposit/depositions?access_token=" . $access_token;
 
+$curl = curl_init();
+   
+curl_setopt($curl, CURLOPT_URL, $url);
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, false);
 
-$return=curl_exec(curl_init("https://zenodo.org/api/deposit/depositions"));
- 
-    if ($success) 
-{
-        OCP\JSON::success(array("data" => array('message' => $return)));
-    } 
+$return = curl_exec($curl);
 
- else {
-        OCP\JSON::error(array("data" => array('message' => $return)));
-    }
+OCP\JSON::encode($return);
+
 }
 
