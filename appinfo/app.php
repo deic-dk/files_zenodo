@@ -22,4 +22,4 @@
 if (\OCP\User::isLoggedIn()) {
     \OCP\Util::addScript('files_zenodo', 'fileactions');
 }
-
+OCP\App::registerAdmin('files_zenodo', 'settings');
