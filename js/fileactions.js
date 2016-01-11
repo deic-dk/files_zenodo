@@ -39,9 +39,24 @@ $(document).ready(function() {
     if (typeof FileActions !== 'undefined') {
 
         FileActions.register('all', t('files_zenodo','to Zenodo'), OC.PERMISSION_READ, '',
-            function(filename, context) {
-                files_zenodo_send(filename, context)
-            });
+function(filename) {
+				if(scanFiles.scanning) { return; } // Workaround to prevent additional http request block scanning feedback
+				if($('#dropdown').length==0){
+					var tr = FileList.findFileEl(filename);
+					var itemType = 'file';
+					var itemSource = $(tr).data('id');
+					var html = '<div id="dropdown" class="drop" data-item-type="'+itemType+'" data-item-source="'+itemSource+'"><b>Send to Zenodo sandbox</b></div>';
+					$(html).appendTo( $(tr).find('td.filename') );
+					$(tr).addClass('mouseOver');
+					addNewDropDown(itemSource);
+				}
+				else {
+					$("#dropdown").slideUp(200, function(){ $(this).remove();});
+					$('tr').removeClass('mouseOver');
+				}
+			}
+//            function(filename, context) { files_zenodo_send(filename, context) }
+);
             
     }
 });
