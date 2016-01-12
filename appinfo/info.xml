@@ -4,7 +4,7 @@
     <name>Files Zenodo</name>
     <description>Upload to Zenodo (zenodo.org)</description>
     <licence>AGPL</licence>
-    <author>Lars Næsbye Christensen</author>
+    <author>Lars Næsbye Christensen, DeIC</author>
     <version>1.0</version>
     <website>https://github.com/deic-dk/files_zenodo</website>
     <bugs>https://github.com/deic-dk/files_zenodo/issues</bugs>

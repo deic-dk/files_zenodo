@@ -1,6 +1,8 @@
 # files_zenodo
 Zenodo integration for ownCloud
 
+Written 2016 by Lars Næsbye Christensen, DeIC
+
 Allows you to send files in compressed form to Zenodo (zenodo.org), including metadata. 
 
 ## Dependencies 

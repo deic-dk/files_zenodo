@@ -1,6 +1,9 @@
 /*                                                                                                                                
  * files_zenodo, ownCloud integration to Zenodo (zenodo.org)
- *                                                                                                                                 
+ *                                                                                                                                
+
+ * Written 2016 by Lars N\xc3\xa6sbye Christensen, DeIC
+ 
  * This library is free software; you can redistribute it and/or                                                                    
  * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE                                                               
  * License as published by the Free Software Foundation; either                                                                     
@@ -40,12 +43,12 @@ $(document).ready(function() {
 
         FileActions.register('all', t('files_zenodo','to Zenodo'), OC.PERMISSION_READ, '',
 function(filename) {
-				if(scanFiles.scanning) { return; } // Workaround to prevent additional http request block scanning feedback
+				if(scanFiles.scanning) { return; }
 				if($('#dropdown').length==0){
 					var tr = FileList.findFileEl(filename);
 					var itemType = 'file';
 					var itemSource = $(tr).data('id');
-					var html = '<div id="dropdown" class="drop" data-item-type="'+itemType+'" data-item-source="'+itemSource+'"><b>Send to Zenodo sandbox</b></div>';
+					var html = '<div id="dropdown" class="drop" data-item-type="'+itemType+'" data-item-source="'+itemSource+'"><b>Send to Zenodo sandbox using these tags? </b><br><input type=button value="Yes!"></div>';
 					$(html).appendTo( $(tr).find('td.filename') );
 					$(tr).addClass('mouseOver');
 					addNewDropDown(itemSource);

@@ -3,6 +3,8 @@
 /*
  * files_zenodo, ownCloud integration to Zenodo (zenodo.org)
  *
+ * Written 2016 by Lars N\xc3\xa6sbye Christensen, DeIC
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
  * License as published by the Free Software Foundation; either
