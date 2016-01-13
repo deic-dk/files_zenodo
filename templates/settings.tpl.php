@@ -19,11 +19,12 @@
 -->
 
 <fieldset id="filesZenodoSettings" class="section">
-<h2><img src="/apps/files_zenodo/img/zenodo.svg" style = 'vertical-align: bottom; margin-right:30px'>Research. Shared.</h2>
+<h2><img src="/apps/files_zenodo/img/zenodo.svg" style = 'vertical-align: baseline; margin-right:30px'>Research. Shared.</h2>
   <br>
   <p>Set your Zenodo access tokens and choose whether to upload to the sandbox or the production environment.</p>
-  <table style='horizontal-align:center;vertical-align:middle'>
+  <table>
   <tr>
+  <tbody>
   <td>
   <input type='radio' name='rb_sandbox' id='rb_sandbox' title='Use the Zenodo sandbox - for testing' checked>
   <label for='rb_sandbox'>Sandbox</label>
@@ -32,6 +33,9 @@
   <label for='sandboxtoken'>Access Token:</label>
   <input type='text' name='sandboxtoken' id = 'sandboxtoken' original-title='' title='Input the access token used in Zenodo sandbox'>
   </td>
+  <td>
+  <input type='button' name='sandboxvalidate' value='Validate'> 
+  </td> 
   </tr>
   <tr>
   <td>
@@ -42,7 +46,11 @@
   <label for='productiontoken'>Access Token:</label>
   <input type='text' name='productiontoken' id = 'productiontoken' original-title='' title='Input the access token used in Zenodo production' disabled>
   </td>
+  <td>
+  <input type='button' name='productionvalidate' value='Validate' disabled>
+  </td>
   </tr>
+  </tbody>
   </table>
   <br>
   <input type='submit' value='Save' id = 'tokensubmit' original-title='' title='Store environment and token'>
