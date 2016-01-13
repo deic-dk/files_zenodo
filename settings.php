@@ -20,7 +20,6 @@
  *
  */
 
-OC_Util::checkAdminUser();
 
 OCP\Util::addScript('files_zenodo', 'settings');
 
