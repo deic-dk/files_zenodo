@@ -19,18 +19,32 @@
 -->
 
 <fieldset id="filesZenodoSettings" class="section">
-<h2><img src="/apps/files_zenodo/img/zenodo.svg"></h2>
-  <?php  
- echo "     
-  <label for='sandbox'>Sandbox</label>
-  <input type='radio' name='sandbox' id='sandbox' title='Use the Zenodo sandbox - for testing' checked>
-  <label for='production' disabled>Production</label>
-  <input type='radio' name='production' id='production' title='Use the live Zenodo API (currently not available)' disabled> 
-  <br> 
-  <label for='token'>Access Token:</label>
-  <input type='text' name='token' id = 'token' original-title='' title='Input the access token used in Zenodo'>
+<h2><img src="/apps/files_zenodo/img/zenodo.svg" style = 'vertical-align: bottom; margin-right:30px'>Research. Shared.</h2>
   <br>
-  <input type='submit' value='Save' id = 'tokensubmit' original-title='' title='Store environment and token'>";
-?>
+  <p>Set your Zenodo access tokens and choose whether to upload to the sandbox or the production environment.</p>
+  <table style='horizontal-align:center;vertical-align:middle'>
+  <tr>
+  <td>
+  <input type='radio' name='rb_sandbox' id='rb_sandbox' title='Use the Zenodo sandbox - for testing' checked>
+  <label for='rb_sandbox'>Sandbox</label>
+  </td>
+  <td>
+  <label for='sandboxtoken'>Access Token:</label>
+  <input type='text' name='sandboxtoken' id = 'sandboxtoken' original-title='' title='Input the access token used in Zenodo sandbox'>
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <input type='radio' name=rb_'production' id='rb_production' title='Use the Zenodo live environment (currently not available)' disabled>
+  <label for='rb_production' disabled>Production</label>
+  </td>
+  <td>
+  <label for='productiontoken'>Access Token:</label>
+  <input type='text' name='productiontoken' id = 'productiontoken' original-title='' title='Input the access token used in Zenodo production' disabled>
+  </td>
+  </tr>
+  </table>
+  <br>
+  <input type='submit' value='Save' id = 'tokensubmit' original-title='' title='Store environment and token'>
 </fieldset>
 

@@ -48,7 +48,7 @@ function(filename) {
 					var tr = FileList.findFileEl(filename);
 					var itemType = 'file';
 					var itemSource = $(tr).data('id');
-					var html = '<div id="dropdown" class="drop" data-item-type="'+itemType+'" data-item-source="'+itemSource+'"><b>Send to Zenodo sandbox using these tags? </b><br><input type=button value="Yes!"></div>';
+					var html = '<div id="dropdown" class="drop" data-item-type="'+itemType+'" data-item-source="'+itemSource+'">Enter metadata you wish to attach to the upload:<br><input type=text size=20><br><input type=button value="Send to Zenodo (sandbox)"></div>';
 					$(html).appendTo( $(tr).find('td.filename') );
 					$(tr).addClass('mouseOver');
 					addNewDropDown(itemSource);
