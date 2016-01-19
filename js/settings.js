@@ -34,8 +34,6 @@ function add_settings(subject, sender, url){
 	});
 }
 
-
-
 $(document).ready(function() {
  	$('#mailsubmit').click(function() {
 		subject = $('#mailsubject').val();

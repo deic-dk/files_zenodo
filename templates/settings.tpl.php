@@ -30,7 +30,7 @@
   <label for='rb_sandbox'>Sandbox</label>
   </td>
   <td>
-  <label for='sandboxtoken'>Access Token:</label>
+  <label for='sandboxtoken'>Access Token :</label>
   <input type='text' name='sandboxtoken' id = 'sandboxtoken' original-title='' title='Input the access token used in Zenodo sandbox'>
   </td>
   <td>
@@ -43,7 +43,7 @@
   <label for='rb_production' disabled>Production</label>
   </td>
   <td>
-  <label for='productiontoken'>Access Token:</label>
+  <label for='productiontoken'>Access Token: </label>
   <input type='text' name='productiontoken' id = 'productiontoken' original-title='' title='Input the access token used in Zenodo production' disabled>
   </td>
   <td>
