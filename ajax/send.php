@@ -26,11 +26,12 @@ if (OCP\App::isEnabled('files_zenodo')) {
 
 $access_token = ""; // here we should add the custom access token
 
-$url = "https://sandbox.zenodo.org/api/deposit/depositions?access_token=" . $access_token;
+$sandboxurl = "https://sandbox.zenodo.org/api/deposit/depositions?access_token=" . $access_token;
+$productionurl = "https://zenodo.org/api/deposit/depositions?access_token=" . $access_token;
 
 $curl = curl_init();
    
-curl_setopt($curl, CURLOPT_URL, $url);
+curl_setopt($curl, CURLOPT_URL, $sandboxurl);
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, false);
 
 $return = curl_exec($curl);

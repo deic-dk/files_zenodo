@@ -22,5 +22,7 @@
 
 OCP\JSON::callCheck();
 
+// here we call the functions for saving settings from the User settings template
+
 }
 
