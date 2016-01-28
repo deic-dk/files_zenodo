@@ -18,30 +18,29 @@
  *                                                                                                                                  
  */  
 
-        function files_zenodo_send (filename, context) {
-            var dir = context.dir || context.fileList.getCurrentDirectory();
-            $.ajax(OC.linkTo('files_zenodo', 'ajax/send.php'), {
-                type: 'POST',
-                data: {
-                    filename: filename,
-                    dir: dir
-                },
-                dataType: 'json',
-                success: function(s) {
-                   alert(JSON.stringify(s));
-
-                },
-                error: function(s) {
-                   alert('error ' + JSON.stringify(s));
-                }
-        });
+function files_zenodo_send (filename, context) {
+	var dir = context.dir || context.fileList.getCurrentDirectory();
+	$.ajax(OC.linkTo('files_zenodo', 'ajax/send.php'), {
+		type: 'POST',
+		data: {
+			filename: filename,
+			dir: dir
+		},
+		dataType: 'json',
+		success: function(s) {
+			alert(JSON.stringify(s));
+			
+		},
+		error: function(s) {
+			alert('error ' + JSON.stringify(s));
+		}
+});
 }
 
 $(document).ready(function() {
-    if (typeof FileActions !== 'undefined') {
-
-        FileActions.register('all', t('files_zenodo','to Zenodo'), OC.PERMISSION_READ, '',
-function(filename) {
+	if (typeof FileActions !== 'undefined') {
+		FileActions.register('all', t('files_zenodo','Zenodo'), OC.PERMISSION_READ, OC.imagePath('files_zenodo','img/zenodo_z'),
+			function(filename) {
 				if(scanFiles.scanning) { return; }
 				if($('#dropdown').length==0){
 					var tr = FileList.findFileEl(filename);
@@ -59,8 +58,7 @@ function(filename) {
 				}
 			}
 //            function(filename, context) { files_zenodo_send(filename, context) }
-);
-            
-    }
+		);
+	}
 });
 
