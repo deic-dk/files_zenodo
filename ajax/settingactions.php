@@ -1,5 +1,4 @@
 <?php
-
 /*
  * files_zenodo, ownCloud integration to Zenodo (zenodo.org)
  *

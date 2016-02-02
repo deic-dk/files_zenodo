@@ -1,5 +1,4 @@
 <?php
-
 /*
  * files_zenodo, ownCloud integration to Zenodo (zenodo.org)
  *
@@ -24,7 +23,7 @@ OCP\JSON::checkLoggedIn();
 
 if (OCP\App::isEnabled('files_zenodo')) {
 
-$access_token = ""; // here we should add the custom access token
+$access_token = ""; //here we should add the custom access token
 
 $sandboxurl = "https://sandbox.zenodo.org/api/deposit/depositions?access_token=" . $access_token;
 $productionurl = "https://zenodo.org/api/deposit/depositions?access_token=" . $access_token;
