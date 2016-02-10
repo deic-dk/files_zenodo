@@ -23,7 +23,7 @@ OCP\JSON::checkLoggedIn();
 
 if (OCP\App::isEnabled('files_zenodo')) {
 
-$access_token = ""; //here we should add the custom access token
+$access_token = "cE6sAlNmSe2ymIXuSDzh80vMMpKzGaITqPq3LTHcpApmXQPj17Fi0luatFZ2"; //works only for sandbox
 
 $sandboxurl = "https://sandbox.zenodo.org/api/deposit/depositions?access_token=" . $access_token;
 $productionurl = "https://zenodo.org/api/deposit/depositions?access_token=" . $access_token;

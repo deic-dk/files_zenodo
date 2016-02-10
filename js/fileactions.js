@@ -1,22 +1,3 @@
-/*                                                                                                                                
- * files_zenodo, ownCloud integration to Zenodo (zenodo.org)
- *                                                                                                                                
- * Written 2016 by Lars N\xc3\xa6sbye Christensen, DeIC
- *  
- * This library is free software; you can redistribute it and/or                                                                    
- * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE                                                               
- * License as published by the Free Software Foundation; either                                                                     
- * version 3 of the License, or any later version.                                                                                  
- *                                                                                                                                  
- * This library is distributed in the hope that it will be useful,                                                                  
- * but WITHOUT ANY WARRANTY; without even the implied warranty of                                                                   
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                                                    
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.                                                                              
- *                                                                                                                                  
- * You should have received a copy of the GNU Lesser General Public                                                                 
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.                                                    
- *                                                                                                                                  
- */  
 
 function files_zenodo_send (filename, context) {
 	var dir = context.dir || context.fileList.getCurrentDirectory();
@@ -48,6 +29,7 @@ $(document).ready(function() {
 					var itemSource = $(tr).data('id');
 					var html = '<div id="dropdown" class="drop" data-item-type="'+itemType+'" data-item-source="'+itemSource+'"><img src="/apps/files_zenodo/img/zenodo.svg"> &nbsp; <img src="/apps/files_zenodo/img/orcid.png"><a href="http://orcid.org/0000-0001-8135-3489" target="_new">0000-0001-8135-3489</a>&nbsp;(change)<br>Zenodo token:<br><br><input type=button value="Publish (sandbox)"> <input type=button value="Publish (production)"></div>';
 
+
 					$(html).appendTo( $(tr).find('td.filename') );
 					$(tr).addClass('mouseOver');
 					addNewDropDown(itemSource);
@@ -60,5 +42,10 @@ $(document).ready(function() {
 //            function(filename, context) { files_zenodo_send(filename, context) }
 		);
 	}
+        // Add action to top bar (visible when files are selected)
+        $('#app-content-files #headerName .selectedActions').prepend(
+                        '<a class="tag btn btn-xs btn-default" id="tag" href=""><i class="icon icon-zenodo"></i>'+t('files_zenodo',' Publish on Zenodo')+'</a>&nbsp;');
+        //$('#headerName .selectedActions .tag').click(OCA.Meta_data.App.tagMultipleDropdown);
+
 });
 

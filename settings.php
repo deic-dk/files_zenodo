@@ -1,5 +1,4 @@
 <?php
-
 /*
  * files_zenodo, ownCloud integration to Zenodo (zenodo.org)
  *
@@ -19,7 +18,6 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 
 OCP\Util::addScript('files_zenodo', 'settings');
 
