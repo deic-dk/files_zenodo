@@ -27,7 +27,7 @@ $(document).ready(function() {
 					var tr = FileList.findFileEl(filename);
 					var itemType = 'file';
 					var itemSource = $(tr).data('id');
-					var html = '<div id="dropdown" class="drop" data-item-type="'+itemType+'" data-item-source="'+itemSource+'"><img src="/apps/files_zenodo/img/zenodo.svg"> &nbsp; <img src="/apps/files_zenodo/img/orcid.png"><a href="http://orcid.org/0000-0001-8135-3489" target="_new">0000-0001-8135-3489</a>&nbsp;(change)<br>Zenodo token:<br><br><input type=button value="Publish (sandbox)"> <input type=button value="Publish (production)"></div>';
+					var html = '<div id="dropdown" class="drop" data-item-type="'+itemType+'" data-item-source="'+itemSource+'"> &nbsp; <img src="/apps/files_zenodo/img/orcid.png"><a href="http://orcid.org/0000-0001-8135-3489" target="_new">0000-0001-8135-3489</a>&nbsp;(change)<br>Zenodo token:<br><br><input type=button value="Publish (sandbox)"> <input type=button value="Publish (production)"></div>';
 
 
 					$(html).appendTo( $(tr).find('td.filename') );
