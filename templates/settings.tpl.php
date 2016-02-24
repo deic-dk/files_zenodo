@@ -1,4 +1,4 @@
-<fieldset id="filesZenodoSettings" class="section" style='background-image: radial-gradient(circle farthest-corner at left top , #0047A8 0px, #2BBCFF 100%); color:white;'>
+<fieldset id="filesZenodoSettings" class="section" style='background-image: radial-gradient(circle farthest-corner at left top, #0047A8, #2BBCFF); color:white;'>
 <h2 ><img src="/apps/files_zenodo/img/zenodo.svg" style='vertical-align: baseline; margin-right:25px;'> Research. Shared.</h2>
   <br>
   <p>Set your Zenodo access tokens and choose whether to upload to the sandbox or the production environment.</p>
@@ -23,7 +23,7 @@
   </td>
   <td>
   <label for='productiontoken'>Access Token: </label>
-  <input type='text' name='productiontoken' id = 'productiontoken' original-title='' title='Input the access token used for Zenodo production'>
+  <input type='text' name='productiontoken' id='productiontoken' original-title='' title='Input the access token used for Zenodo production'>
   </td>
   <td>
   <input type='button' name='productionvalidate' value='Validate'>

@@ -27,7 +27,7 @@ $(document).ready(function() {
 					var tr = FileList.findFileEl(filename);
 					var itemType = 'file';
 					var itemSource = $(tr).data('id');
-					var html = '<div id="dropdown" class="drop" data-item-type="'+itemType+'" data-item-source="'+itemSource+'"> &nbsp; <img src="/apps/files_zenodo/img/orcid.png"><a href="http://orcid.org/0000-0001-8135-3489" target="_new">0000-0001-8135-3489</a>&nbsp;(change)<br>Zenodo token:<br><br><input type=button value="Publish (sandbox)"> <input type=button value="Publish (production)"></div>';
+					var html = '<div id="dropdown" class="drop" data-item-type="'+itemType+'" data-item-source="'+itemSource+'">&nbsp;<img src="/apps/files_zenodo/img/orcid.png"><a href="http://orcid.org/0000-0001-8135-3489" target="_new">0000-0001-8135-3489</a>&nbsp;(change)<br>Zenodo token:<br><br><input type=button value="Publish (sandbox)"> <input type=button value="Publish (production)"></div>';
 
 
 					$(html).appendTo( $(tr).find('td.filename') );
@@ -39,12 +39,11 @@ $(document).ready(function() {
 					$('tr').removeClass('mouseOver');
 				}
 			}
-//            function(filename, context) { files_zenodo_send(filename, context) }
 		);
 	}
         // Add action to top bar (visible when files are selected)
         $('#app-content-files #headerName .selectedActions').prepend(
-                        '<a class="tag btn btn-xs btn-default" id="tag" href=""><i class="icon icon-zenodo"></i>'+t('files_zenodo',' Publish on Zenodo')+'</a>&nbsp;');
+                        '<a class="tag btn btn-xs btn-default" id="tag" href=""><i class="icon icon-zenodo"></i>'+t('files_zenodo',' Zenodo')+'</a>&nbsp;');
         //$('#headerName .selectedActions .tag').click(OCA.Meta_data.App.tagMultipleDropdown);
 
 });

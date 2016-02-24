@@ -23,10 +23,10 @@ OCP\JSON::checkLoggedIn();
 
 if (OCP\App::isEnabled('files_zenodo')) {
 
-$access_token = "cE6sAlNmSe2ymIXuSDzh80vMMpKzGaITqPq3LTHcpApmXQPj17Fi0luatFZ2"; 
-$productiontoken = ""; // never write an actual production token here
+$sandbox_token = "cE6sAlNmSe2ymIXuSDzh80vMMpKzGaITqPq3LTHcpApmXQPj17Fi0luatFZ2"; 
+$productiontoken = ""; // NEVER write an actual production token here
 
-$sandboxurl = "https://sandbox.zenodo.org/api/deposit/depositions?access_token=" . $access_token;
+$sandboxurl = "https://sandbox.zenodo.org/api/deposit/depositions?access_token=" . $sandbox_token;
 $productionurl = "https://zenodo.org/api/deposit/depositions?access_token=" . $production_token;
 
 $curl = curl_init();
@@ -37,6 +37,5 @@ curl_setopt($curl, CURLOPT_RETURNTRANSFER, false);
 $return = curl_exec($curl);
 
 OCP\JSON::encode($return);
-
 }
 
