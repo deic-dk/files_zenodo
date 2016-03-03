@@ -29,13 +29,21 @@ $productiontoken = ""; // NEVER write an actual production token here
 $sandboxurl = "https://sandbox.zenodo.org/api/deposit/depositions?access_token=" . $sandbox_token;
 $productionurl = "https://zenodo.org/api/deposit/depositions?access_token=" . $production_token;
 
-$curl = curl_init();
-   
-curl_setopt($curl, CURLOPT_URL, $sandboxurl);
-curl_setopt($curl, CURLOPT_RETURNTRANSFER, false);
+$metadata = array('key1' => 'value1', 'key2' => 'value2'); // deposition metadata ( https://www.zenodo.org/dev#restapi-rep-meta )
 
-$return = curl_exec($curl);
+$options = array(
+    'http' => array(
+        'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+        'method'  => 'POST',
+        'content' => http_build_query($metadata),
+    ),
+);
 
-OCP\JSON::encode($return);
+$context  = stream_context_create($options);
+$result = file_get_contents($sandboxurl, false, $context);
+if ($result === FALSE) { /* error */ }
+
+var_dump($result);
+
 }
 
