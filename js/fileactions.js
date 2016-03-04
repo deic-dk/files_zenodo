@@ -27,8 +27,11 @@ $(document).ready(function() {
 					var tr = FileList.findFileEl(filename);
 					var itemType = 'file';
 					var itemSource = $(tr).data('id');
-					var html = '<div id="dropdown" class="drop" data-item-type="'+itemType+'" data-item-source="'+itemSource+'">&nbsp;<img src="/apps/files_zenodo/img/orcid.png"><a href="http://orcid.org/0000-0001-8135-3489" target="_new">0000-0001-8135-3489</a>&nbsp;(change)<br>Zenodo token:<br><br><input type=button value="Publish (sandbox)"> <input type=button value="Publish (production)"></div>';
-
+                                        var html = '<div id="dropdown" class="drop" data-item-type="'
+					+itemType+
+					'" data-item-source="'
+					+itemSource+
+					'"><b>Upload type:</b> <select id="uploadtype"><option value="publication">Publication</option><option value="poster">Poster</option><option value="presentation">Presentation</option><option value="dataset">Dataset</option><option value="image">Image</option><option value="video">Video/Audio</option><option value="software">Software</option></select>&nbsp;<select id="publicationtype"><option value="book">Book</option><option value="section">Section</option><option value="conferencepaper">Conference paper</option><option value="article">Article</option><option value="patent">Patent</option><option value="preprint">Preprint</option><option value="report">Report</option><option value="softwaredocumentation">Software documentation</option><option value="thesis">Thesis</option><option value="technicalnote">Technical note</option><option value="workingpaper">Working paper</option><option value="other">Other</option></select>&nbsp;<select id="imagetype"><option value="figure">Figure</option><option value="plot">Plot</option><option value="drawing">Drawing</option><option value="diagram">Diagram</option><option value="photo">Photo</option><option value="other">Other</option></select><br><b>Publication date:</b> <input type="text" id="publicationdate"><br><b>Title:</b> <input type="text" id="title"><br><b>Creators:</b> <input type="text" id="creators"><br><b>Description:</b> <input type="text" id="description"><br><b>Access right:</b> <select id="accessright"><option value="open">Open</option><option value="embargoed">Embargoed</option><option value="restricted">Restricted</option><option value="closed">Closed</option></select><br><b>License:</b> ( to be selected from https://zenodo.org/kb/export?kbname=licenses&format=kba )<br><br><input type=button value="Publish (sandbox)"> <input type=button value="Publish (production)"></div>';
 
 					$(html).appendTo( $(tr).find('td.filename') );
 					$(tr).addClass('mouseOver');
