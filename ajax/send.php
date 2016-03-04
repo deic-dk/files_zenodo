@@ -29,13 +29,54 @@ $productiontoken = ""; // NEVER write an actual production token here
 $sandboxurl = "https://sandbox.zenodo.org/api/deposit/depositions?access_token=" . $sandbox_token;
 $productionurl = "https://zenodo.org/api/deposit/depositions?access_token=" . $production_token;
 
-$metadata = array('key1' => 'value1', 'key2' => 'value2'); // deposition metadata ( https://www.zenodo.org/dev#restapi-rep-meta )
+$metadata = array(
+	'upload_type' => 'value1', 
+	'publication_type' => 'value2',
+	'image_type' => 'value3',
+	'publication_date' => 'value4',
+	'title' => 'value5',
+	'creators' => array(),
+	'description' => 'value6',
+	'access_right' => 'value7',
+	'license' => 'value8',
+	'embargo_date' => 'value9',
+	'access_conditions' => 'value10',
+	'doi' => 'value11',
+	'prereserve_doi' => false,
+	'keywords' => array('keyword1', 'keyword2'),
+	'notes' => 'value12',
+	'related_identifiers' => array(),
+	'contributors' => array(),
+	'references' => array('ref1','ref2'),
+	'communities' => array(),
+	'grants' => array(),
+        'journal_title' => 'value13',
+        'journal_volume' => 'value14',
+        'journal_issue' => 'value15',
+        'journal_pages' => 'value16',
+        'conference_title' => 'value17',
+        'conference_acronym' => 'value18',
+        'conference_dates' => 'value19',
+        'conference_place' => 'value20',
+        'conference_url' => 'value21',
+        'conference_session' => 'value22',
+        'conference_session_part' => 'value23',
+        'imprint_publisher' => 'value24',
+        'imprint_isbn' => 'value25',
+        'imprint_place' => 'value26',
+        'partof_title' => 'value27',
+        'partof_pages' => 'value28',
+        'thesis_supervisors' => array(),
+        'thesis_university' => 'value29',
+        'subjects' => array()
+
+); 
 
 $options = array(
     'http' => array(
         'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
         'method'  => 'POST',
-        'content' => http_build_query($metadata),
+        'content' => http_build_query($metadata)
     ),
 );
 
