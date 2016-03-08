@@ -35,7 +35,6 @@ $(document).ready(function() {
 
 					$(html).appendTo( $(tr).find('td.filename') );
 					$(tr).addClass('mouseOver');
-					addNewDropDown(itemSource);
 				}
 				else {
 					$("#dropdown").slideUp(200, function(){ $(this).remove();});
