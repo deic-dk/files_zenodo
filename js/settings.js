@@ -1,5 +1,2 @@
 // which functions are needed here?
-
-$(document).ready(function() {
-});		
-
+$(document).ready(function() {});
