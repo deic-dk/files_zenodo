@@ -23,8 +23,8 @@ OCP\JSON::checkLoggedIn();
 
 if (OCP\App::isEnabled('files_zenodo')) {
 
-$sandbox_token = file_get_contents('../tokens/sandbox.token'); 
-$productiontoken = file_get_contents('../tokens/production.token');
+$sandbox_token = file_get_contents('../tokens/sandbox.token'); // replace with DB lookups
+$productiontoken = file_get_contents('../tokens/production.token'); // replace with DB lookups
 
 $sandboxurl = "https://sandbox.zenodo.org/api/deposit/depositions?access_token=" . $sandbox_token;
 $productionurl = "https://zenodo.org/api/deposit/depositions?access_token=" . $production_token;
