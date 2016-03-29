@@ -8,7 +8,7 @@
   <label for='sandboxtoken'>Sandbox token:</label>
   </td>
   <td>
-  <input type='text' name='sandboxtoken' id='sandboxtoken' original-title='' title='Input the access token used for Zenodo sandbox'>
+  <input type='text' name='sandboxtoken' id='sandboxtoken' original-title='' title='Input the access token used for Zenodo sandbox' style='width:450px;'>
   </td>
   <td>
   <input type='button' name='sandboxvalidate' value='Validate'> 
@@ -19,7 +19,7 @@
   <label for='productiontoken'>Production token: </label>
   </td>
   <td>
-  <input type='text' name='productiontoken' id='productiontoken' original-title='' title='Input the access token used for Zenodo production'>
+  <input type='text' name='productiontoken' id='productiontoken' original-title='' title='Input the access token used for Zenodo production' style='width:450px;'>
   </td>
   <td>
   <input type='button' name='productionvalidate' value='Validate'>
