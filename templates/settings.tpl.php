@@ -11,7 +11,7 @@
   <input type='text' name='sandboxtoken' id='sandboxtoken' original-title='' title='Input the access token used for Zenodo sandbox' style='width:450px;'>
   </td>
   <td>
-  <input type='button' name='sandboxvalidate' value='Validate'> 
+  <input type='button' name='sandboxvalidate' value='Validate' disabled> 
   </td> 
   </tr>
   <tr>
@@ -22,7 +22,7 @@
   <input type='text' name='productiontoken' id='productiontoken' original-title='' title='Input the access token used for Zenodo production' style='width:450px;'>
   </td>
   <td>
-  <input type='button' name='productionvalidate' value='Validate'>
+  <input type='button' name='productionvalidate' value='Validate' disabled>
   </td>
   </tr>
   </table>
