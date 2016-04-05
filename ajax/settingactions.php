@@ -18,8 +18,10 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+namespace OCA\FilesZenodo\Ajax;
 
 OCP\JSON::callCheck();
 
-// here we call the functions for saving settings from the Admin settings template
+// Functions for saving settings from the Admin settings template
+
 

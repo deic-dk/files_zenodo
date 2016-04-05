@@ -17,11 +17,13 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.                                                    
  *                                                                                                                                  
  */
+namespace OCA\FilesZenodo\AppInfo;
 
 // Load our fileactions script
 if (\OCP\User::isLoggedIn()) {
     \OCP\Util::addScript('files_zenodo', 'fileactions');
 }
 
- OCP\App::registerAdmin('files_zenodo', 'settings');
+// Register the panel in Admin settings
+ \OCP\App::registerAdmin('files_zenodo', 'settings');
 
