@@ -19,14 +19,15 @@
  *
  */
 
-namespace OCA\FilesZenodo\Ajax;
+namespace OCA\FilesZenodo\Send;
 
 OCP\JSON::checkLoggedIn();
 
 if (\OCP\App::isEnabled('files_zenodo')) {
 
-$sandbox_token = file_get_contents('../tokens/sandbox.token'); // replace with DB lookups
-$productiontoken = file_get_contents('../tokens/production.token'); // replace with DB lookups
+// FIXME get our universal tokens from DB instead
+$sandbox_token = "";
+$productiontoken = "";
 
 $sandboxurl = "https://sandbox.zenodo.org/api/deposit/depositions?access_token=" . $sandbox_token;
 $productionurl = "https://zenodo.org/api/deposit/depositions?access_token=" . $production_token;

@@ -17,7 +17,9 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.                                                    
  *                                                                                                                                  
  */
-namespace OCA\FilesZenodo\AppInfo;
+
+OC::$CLASSPATH['OCA\FilesZenodo\Db'] = 'files_zenodo/ajax/db.php';
+OC::$CLASSPATH['OCA\FilesZenodo\Send'] = 'files_zenodo/ajax/send.php';
 
 // Load our fileactions script
 if (\OCP\User::isLoggedIn()) {

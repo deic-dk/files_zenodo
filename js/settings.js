@@ -1,2 +1,8 @@
-// which functions are needed here?
-$(document).ready(function() {});
+
+
+$(document).ready(function() {
+
+document.getElementById('sandboxtoken').value = "placeholder sandbox token";
+document.getElementById('productiontoken').value = "placeholder production token";
+
+});

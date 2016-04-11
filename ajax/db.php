@@ -23,7 +23,7 @@ namespace OCA\FilesZenodo\Db;
 
 use \OCP\IDb;
 
-class FilesZenodoDAO {
+class FilesZenodoDB {
 
     private $db;
 
@@ -60,7 +60,7 @@ class FilesZenodoDAO {
     }
 
     public function set_production_token(string $intoken) {
-        $sql = 'UPDATE `*PREFIX*files_zenodo_tokens`` SET `token_string` =' . $intoken . ' WHERE `*PREFIX*files_zenodo_tokens`.`token_id` = 1';
+        $sql = 'UPDATE `*PREFIX*files_zenodo_tokens` SET `token_string` =' . $intoken . ' WHERE `*PREFIX*files_zenodo_tokens`.`token_id` = 1';
         $query = $db->prepareQuery($sql);
         $result = $query->execute();
         return $result;
