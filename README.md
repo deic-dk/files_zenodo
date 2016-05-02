@@ -13,3 +13,4 @@ Allows you to send files in compressed form to Zenodo (zenodo.org), including me
 ## Installation instructions
 Copy the app files to the **owncloud/apps/** directory. Make sure the server can write to the user directory - this is needed for temporary files courtesy of the files_compress app.
 
+
