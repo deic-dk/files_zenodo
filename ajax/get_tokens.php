@@ -19,29 +19,8 @@
  *
  */
 
-// obtain current user's id
-if (isset($_GET['user_id'])) {
-    $user_id = $_GET['user_id'];
-} else {
-    $user_id = \OC::$server->getUserSession()->getUser()->getUID();
-}
 
-//FIXME: needs serious optimisation
-
-$sandboxsql		= "SELECT token_string FROM `*PREFIX*files_zenodo_tokens` WHERE `*PREFIX*files_zenodo_tokens`.`token_name` = 'sandbox'";
-$productionsql		= "SELECT token_string FROM `*PREFIX*files_zenodo_tokens` WHERE `*PREFIX*files_zenodo_tokens`.`token_name` = 'production'";
-
-$sandboxquery		= \OCP\DB::prepare($sandboxsql); //FIXME: Deprecated since 8.1.0 use prepare() of \OCP\IDBConnection - \OC::$server->getDatabaseConnection()
-$productionquery	= \OCP\DB::prepare($productionsql);
-
-$sandboxoutput		= $sandboxquery->execute();
-$productionoutput	= $productionquery->execute();
-
-$sandboxrow		= $sandboxoutput->fetchRow();
-$productionrow		= $productionoutput->fetchRow();
-
-$sandboxresult		= $sandboxrow['token_string'];
-$productionresult	= $productionrow['token_string'];
-
-OCP\JSON::success(array('sandboxtoken' => $sandboxresult, 'productiontoken' => $productionresult));
+$sandboxtoken = OC_Appconfig::getValue('files_zenodo', 'sandboxtoken');
+$productiontoken = OC_Appconfig::getValue('files_zenodo', 'productiontoken');
+OCP\JSON::success(array('sandboxtoken' => $sandboxtoken, 'productiontoken' => $productiontoken));
 

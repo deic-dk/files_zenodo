@@ -19,28 +19,16 @@
  *
  */
 
-// obtain current user's id
-if (isset($_GET['user_id'])) {
-    $user_id = $_GET['user_id'];
-} else {
-    $user_id = \OC::$server->getUserSession()->getUser()->getUID();
-}
-
 // set the tokens via database query
 
 $sandboxtoken            = $_POST['sandboxtoken'];
 $productiontoken         = $_POST['productiontoken'];
 
-//FIXME: \OCP\DB::prepare is deprecated since 8.1.0 use prepare() of \OCP\IDBConnection - \OC::$server->getDatabaseConnection()
+OC_Appconfig::setValue('files_zenodo', 'sandboxtoken', $sandboxtoken);
+OC_Appconfig::setValue('files_zenodo', 'productiontoken', $productiontoken);
 
-$sandboxsql    = "INSERT INTO `*PREFIX*files_zenodo_tokens` (`token_name`, `token_string`) VALUES ('sandbox', '" . $sandboxtoken . "') ON DUPLICATE KEY UPDATE token_string = '" . $sandboxtoken . "', token_name = 'sandbox'";
 
-$sandboxquery  = \OCP\DB::prepare($sandboxsql); 
-$result = $sandboxquery->execute();
+OCP\JSON::success();
 
-$productionsql    = "INSERT INTO `*PREFIX*files_zenodo_tokens` (`token_name`, `token_string`) VALUES ('production', '" . $productiontoken . "') ON DUPLICATE KEY UPDATE token_string = '" . $productiontoken . "', token_name = 'production'";
-$productionquery  = \OCP\DB::prepare($productionsql);
-$result = $productionquery->execute();
 
-OCP\JSON::success(array('result' => $result));
 

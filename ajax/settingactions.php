@@ -19,6 +19,6 @@
  *
  */
 
-OCP\JSON::callCheck(); //FIXME: Deprecated since 8.1.0 Use annotation based CSRF checks from the AppFramework instead
+OCP\JSON::callCheck();
 
 // Functions for saving settings from the Admin settings template
