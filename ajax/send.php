@@ -23,9 +23,9 @@ OCP\JSON::checkLoggedIn();
 
 if (\OCP\App::isEnabled('files_zenodo')) {
     
-    // FIXME get our universal tokens from DB instead
-    $sandbox_token   = "";
-    $productiontoken = "";
+    
+    $sandbox_token    = OC_Appconfig::getValue('files_zenodo', 'sandboxtoken');
+    $production_token = OC_Appconfig::getValue('files_zenodo', 'productiontoken');
     
     $sandboxurl    = "https://sandbox.zenodo.org/api/deposit/depositions?access_token=" . $sandbox_token;
     $productionurl = "https://zenodo.org/api/deposit/depositions?access_token=" . $production_token;
@@ -95,4 +95,4 @@ if (\OCP\App::isEnabled('files_zenodo')) {
     
     var_dump($result);
     
-}
+} 
