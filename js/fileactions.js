@@ -12,7 +12,7 @@ function files_zenodo_send(filename, context) {
 
 		},
 		error: function(s) {
-			alert('error ' + JSON.stringify(s));
+			alert('Error: ' + JSON.stringify(s));
 		}
 	});
 }

@@ -95,4 +95,4 @@ if (\OCP\App::isEnabled('files_zenodo')) {
                 
                 var_dump($result);
                 
-} 
+}
