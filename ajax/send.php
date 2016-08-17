@@ -30,6 +30,8 @@ if (\OCP\App::isEnabled('files_zenodo')) {
                 $sandboxurl    = "https://sandbox.zenodo.org/api/deposit/depositions?access_token=" . $sandbox_token;
                 $productionurl = "https://zenodo.org/api/deposit/depositions?access_token=" . $production_token;
                 
+		$callbackURL   = getBaseUrl() . "/index.php/apps/files_zenodo" // does this work?
+
                 $metadata = array(
                                 'upload_type' => 'value1',
                                 'publication_type' => 'value2',
@@ -45,8 +47,8 @@ if (\OCP\App::isEnabled('files_zenodo')) {
                                 'doi' => 'value11',
                                 'prereserve_doi' => false,
                                 'keywords' => array(
-                                                'keyword1',
-                                                'keyword2'
+                                                'key1',
+                                                'key2'
                                 ),
                                 'notes' => 'value12',
                                 'related_identifiers' => array(),
@@ -55,8 +57,14 @@ if (\OCP\App::isEnabled('files_zenodo')) {
                                                 'ref1',
                                                 'ref2'
                                 ),
-                                'communities' => array(),
-                                'grants' => array(),
+                                'communities' => array(
+                                                'com1',
+                                                'com2'
+                                ),
+                                'grants' => array(
+                                                'grant1',
+                                                'grant2'
+                                ),
                                 'journal_title' => 'value13',
                                 'journal_volume' => 'value14',
                                 'journal_issue' => 'value15',
@@ -73,9 +81,15 @@ if (\OCP\App::isEnabled('files_zenodo')) {
                                 'imprint_place' => 'value26',
                                 'partof_title' => 'value27',
                                 'partof_pages' => 'value28',
-                                'thesis_supervisors' => array(),
+                                'thesis_supervisors' => array(
+                                                'sup1',
+                                                'sup2'
+				),
                                 'thesis_university' => 'value29',
-                                'subjects' => array()
+                                'subjects' => array(
+                                                'sub1',
+                                                'sub2'
+				)
                                 
                 );
                 
@@ -89,6 +103,7 @@ if (\OCP\App::isEnabled('files_zenodo')) {
                 
                 $context = stream_context_create($options);
                 $result  = file_get_contents($sandboxurl, false, $context);
+
                 if ($result === FALSE) {
                                 /* error */
                 }

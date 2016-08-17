@@ -3,7 +3,7 @@ Zenodo integration for ownCloud
 
 Written 2016 by Lars Næsbye Christensen, DeIC
 
-Allows you to send files to Zenodo (zenodo.org). 
+Allows you to send files to Zenodo (zenodo.org). **Not working yet**
 
 ## Dependencies 
  * (Optional) **files_compress** app for compressing folders into a tarball
