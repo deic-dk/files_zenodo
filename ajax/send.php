@@ -22,82 +22,24 @@
 OCP\JSON::checkLoggedIn();
 
 if (\OCP\App::isEnabled('files_zenodo')) {
-                
-                
+                $filename = $_POST["filename"];
+                $dir      = $_POST["dir"];
+                $metadata = $_POST["metadata"]; 
+               
                 $sandbox_token    = OC_Appconfig::getValue('files_zenodo', 'sandboxtoken');
-                $production_token = OC_Appconfig::getValue('files_zenodo', 'productiontoken');
+                //$production_token = OC_Appconfig::getValue('files_zenodo', 'productiontoken');
                 
                 $sandboxurl    = "https://sandbox.zenodo.org/api/deposit/depositions?access_token=" . $sandbox_token;
-                $productionurl = "https://zenodo.org/api/deposit/depositions?access_token=" . $production_token;
+                //$productionurl = "https://zenodo.org/api/deposit/depositions?access_token=" . $production_token;
                 
-		$callbackURL   = getBaseUrl() . "/index.php/apps/files_zenodo" // does this work?
+		$callbackURL   = getBaseUrl() . "/index.php/apps/files_zenodo"; // FIXME: right URL?
 
-                $metadata = array(
-                                'upload_type' => 'value1',
-                                'publication_type' => 'value2',
-                                'image_type' => 'value3',
-                                'publication_date' => 'value4',
-                                'title' => 'value5',
-                                'creators' => array(),
-                                'description' => 'value6',
-                                'access_right' => 'value7',
-                                'license' => 'value8',
-                                'embargo_date' => 'value9',
-                                'access_conditions' => 'value10',
-                                'doi' => 'value11',
-                                'prereserve_doi' => false,
-                                'keywords' => array(
-                                                'key1',
-                                                'key2'
-                                ),
-                                'notes' => 'value12',
-                                'related_identifiers' => array(),
-                                'contributors' => array(),
-                                'references' => array(
-                                                'ref1',
-                                                'ref2'
-                                ),
-                                'communities' => array(
-                                                'com1',
-                                                'com2'
-                                ),
-                                'grants' => array(
-                                                'grant1',
-                                                'grant2'
-                                ),
-                                'journal_title' => 'value13',
-                                'journal_volume' => 'value14',
-                                'journal_issue' => 'value15',
-                                'journal_pages' => 'value16',
-                                'conference_title' => 'value17',
-                                'conference_acronym' => 'value18',
-                                'conference_dates' => 'value19',
-                                'conference_place' => 'value20',
-                                'conference_url' => 'value21',
-                                'conference_session' => 'value22',
-                                'conference_session_part' => 'value23',
-                                'imprint_publisher' => 'value24',
-                                'imprint_isbn' => 'value25',
-                                'imprint_place' => 'value26',
-                                'partof_title' => 'value27',
-                                'partof_pages' => 'value28',
-                                'thesis_supervisors' => array(
-                                                'sup1',
-                                                'sup2'
-				),
-                                'thesis_university' => 'value29',
-                                'subjects' => array(
-                                                'sub1',
-                                                'sub2'
-				)
-                                
-                );
                 
                 $options = array(
                                 'http' => array(
                                                 'header' => "Content-type: application/x-www-form-urlencoded\r\n",
                                                 'method' => 'POST',
-                                                'content' => http_build_query($metadata)
+                                                'content' => http_build_query(null)
                                 )
                 );
                 
