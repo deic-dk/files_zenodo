@@ -1,8 +1,8 @@
- <?php
+<?php
 /*
  * files_zenodo, ownCloud integration to Zenodo (zenodo.org)
  *
- * Written 2016 by Lars N\xc3\xa6sbye Christensen, DeIC
+ * Written 2016 by Lars Næsbye Christensen, DeIC
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
@@ -27,29 +27,25 @@ if (\OCP\App::isEnabled('files_zenodo')) {
                 $metadata = $_POST["metadata"]; 
                
                 $sandbox_token    = OC_Appconfig::getValue('files_zenodo', 'sandboxtoken');
-                //$production_token = OC_Appconfig::getValue('files_zenodo', 'productiontoken');
+                $production_token = OC_Appconfig::getValue('files_zenodo', 'productiontoken');
                 
                 $sandboxurl    = "https://sandbox.zenodo.org/api/deposit/depositions?access_token=" . $sandbox_token;
-                //$productionurl = "https://zenodo.org/api/deposit/depositions?access_token=" . $production_token;
+                $productionurl = "https://zenodo.org/api/deposit/depositions?access_token=" . $production_token;
                 
-		$callbackURL   = getBaseUrl() . "/index.php/apps/files_zenodo"; // FIXME: right URL?
 
                 
                 $options = array(
                                 'http' => array(
                                                 'header' => "Content-type: application/x-www-form-urlencoded\r\n",
                                                 'method' => 'POST',
-                                                'content' => http_build_query(null)
+                                                'content' => http_build_query($metadata)
                                 )
                 );
                 
                 $context = stream_context_create($options);
                 $result  = file_get_contents($sandboxurl, false, $context);
 
-                if ($result === FALSE) {
-                                /* error */
-                }
-                
-                var_dump($result);
+                                OCP\JSON::success($result);
+
                 
 }

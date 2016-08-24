@@ -21,8 +21,9 @@ $(document).ready(function() {
 
 	});
 
+	// retrieve our stored token values (if any)
 	$.ajax(OC.linkTo('files_zenodo', 'ajax/get_tokens.php'), {
-		type: "POST",
+		type: "GET",
 		dataType: 'json',
 		success: function(s) {
 			document.getElementById('sandboxtoken').value = s['sandboxtoken'];

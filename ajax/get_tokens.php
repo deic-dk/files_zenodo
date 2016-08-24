@@ -2,7 +2,7 @@
 /*
  * files_zenodo, ownCloud integration to Zenodo (zenodo.org)
  *
- * Written 2016 by Lars N\xc3\xa6sbye Christensen, DeIC
+ * Written 2016 by Lars Næsbye Christensen, DeIC
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
@@ -18,7 +18,6 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 
 $sandboxtoken    = OC_Appconfig::getValue('files_zenodo', 'sandboxtoken');
 $productiontoken = OC_Appconfig::getValue('files_zenodo', 'productiontoken');
