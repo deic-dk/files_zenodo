@@ -20,9 +20,8 @@
  */
 
 // Load our fileactions script
-if (\OCP\User::isLoggedIn()) {
-                \OCP\Util::addScript('files_zenodo', 'fileactions');
-}
+
+\OCP\Util::addScript('files_zenodo', 'fileactions');
 
 // Register the panel in Admin settings
 \OCP\App::registerAdmin('files_zenodo', 'settings'); 
