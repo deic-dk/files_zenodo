@@ -94,7 +94,9 @@
       	}
 
       	// Add action to top bar (visible when files are selected)
-      	$('#headerName .selectedActions').prepend(
-      		'<a class="tag btn btn-xs btn-default" id="tag" href=""><i class="icon icon-zenodo"></i>' + t('files_zenodo', ' Publish') + '</a>&nbsp;');
-
+      	if(!$('.nav-sidebar li[data-id="sharing_in"] a.active').length &&
+      			!$('.nav-sidebar li[data-id="trash"] a.active').length){
+	      	$('#headerName .selectedActions').prepend(
+	      		'<a class="zenodo btn btn-xs btn-default" id="zenodo" href=""><i class="icon icon-zenodo"></i>' + t('files_zenodo', ' Publish') + '</a>&nbsp;');
+      	}
       });
