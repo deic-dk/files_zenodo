@@ -94,9 +94,10 @@
       	}
 
       	// Add action to top bar (visible when files are selected)
-      	if(!$('.nav-sidebar li[data-id="sharing_in"] a.active').length &&
-      			!$('.nav-sidebar li[data-id="trash"] a.active').length){
+      	/*if(!$('.nav-sidebar li[data-id="sharing_in"] a.active').length &&
+      			!$('.nav-sidebar li[data-id="trash"] a.active').length &&
+      			(typeof OCA.Files !== 'undefined' && OCA.Files.FileList.prototype.getGetParam('view')!='trashbin')){
 	      	$('#headerName .selectedActions').prepend(
 	      		'<a class="zenodo btn btn-xs btn-default" id="zenodo" href=""><i class="icon icon-zenodo"></i>' + t('files_zenodo', ' Publish') + '</a>&nbsp;');
-      	}
+      	}*/
       });
