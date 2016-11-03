@@ -3,7 +3,8 @@ Zenodo integration for ownCloud
 
 Written 2016 by Lars Næsbye Christensen, DeIC
 
-Allows you to send files to Zenodo (zenodo.org). **Not working yet!**
+Allows you to send a file or folder to [Zenodo](http://zenodo.org) (production/live or sandbox) from within ownCloud/Nextcloud.
+Simply click the 'Zenodo' action button in the filelist.
 
 ## Dependencies 
  * ownCloud 7.0.x (not tested with newer)
