@@ -71,7 +71,7 @@
       $(document).ready(function() {
       	if (typeof FileActions !== 'undefined') {
       		// Register our function with ownCloud - files, not folders
-      		FileActions.register('file', t('files_zenodo', 'Zenodo'), OC.PERMISSION_READ, OC.imagePath('files_zenodo', 'img/zenodo_z'),
+      		FileActions.register('file', t('files_zenodo', 'Zenodo'), OC.PERMISSION_READ, OC.imagePath('files_zenodo', 'zenodo_z'),
       			function(filename, context) {
       				if (scanFiles.scanning) {
       					return;
