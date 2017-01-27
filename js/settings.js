@@ -15,10 +15,8 @@ $(document).ready(function() {
 			success: function(s) {
 				document.getElementById('zenodostatus').style.color = "green";
 				document.getElementById('zenodostatus').innerHTML = "Stored.";
-
 			}
 		});
-
 	});
 
 	// retrieve our stored token values (if any)
