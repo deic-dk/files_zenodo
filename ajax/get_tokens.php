@@ -1,9 +1,9 @@
 <?php
 
-$sandboxtoken    = OC_Appconfig::getValue('files_zenodo', 'sandboxtoken');
-$productiontoken = OC_Appconfig::getValue('files_zenodo', 'productiontoken');
+$clientAppID  = OC_Appconfig::getValue('files_zenodo', 'clientAppID');
+$clientSecret = OC_Appconfig::getValue('files_zenodo', 'clientSecret');
 
 OCP\JSON::success(array(
-		'sandboxtoken' => $sandboxtoken,
-		'productiontoken' => $productiontoken
+		'clientAppID' => $clientAppID,
+		'clientSecret' => $clientSecret
 ));

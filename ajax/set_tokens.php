@@ -1,9 +1,9 @@
 <?php
 
-$sandboxtoken = $_POST['sandboxtoken'];
-$productiontoken = $_POST['productiontoken'];
+$clientAppID = $_POST['clientAppID'];
+$clientSecret = $_POST['clientSecret'];
 
-OC_Appconfig::setValue('files_zenodo', 'sandboxtoken', $sandboxtoken);
-OC_Appconfig::setValue('files_zenodo', 'productiontoken', $productiontoken);
+OC_Appconfig::setValue('files_zenodo', 'clientAppID', $clientAppID);
+OC_Appconfig::setValue('files_zenodo', 'clientSecret', $clientSecret);
 
 OCP\JSON::success();

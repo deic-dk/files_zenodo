@@ -2,19 +2,19 @@ $(document).ready(function() {
 
 	// catch clicks on our Submit button
 	$('#tokensubmit').click(function() {
-		productiontoken = document.getElementById('productiontoken').value;
-		sandboxtoken = document.getElementById('sandboxtoken').value;
+		clientAppID = $('#clientAppID').val();
+		clientSecret = $('#clientSecret').val();
 
 		$.ajax(OC.linkTo('files_zenodo', 'ajax/set_tokens.php'), {
 			type: "POST",
 			data: {
-				sandboxtoken: sandboxtoken,
-				productiontoken: productiontoken
+				clientAppID: clientAppID,
+				clientSecret: clientSecret
 			},
 			dataType: 'json',
 			success: function(s) {
-				document.getElementById('zenodostatus').style.color = "green";
-				document.getElementById('zenodostatus').innerHTML = "Stored.";
+				 OC.msg.finishedSaving('#zenodostatus', {status: 'success', data: {message: "Client ID/secret stored."}});
+					$('#zenodostatus').css("color", "green");
 			}
 		});
 	});
@@ -24,8 +24,8 @@ $(document).ready(function() {
 		type: "GET",
 		dataType: 'json',
 		success: function(s) {
-			document.getElementById('sandboxtoken').value = s['sandboxtoken'];
-			document.getElementById('productiontoken').value = s['productiontoken'];
+			$('#clientAppID').val(s['clientAppID']);
+			$('#clientSecret').val( s['clientSecret']);
 		}
 	});
 
