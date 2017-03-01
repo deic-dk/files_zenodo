@@ -1,7 +1,7 @@
 # Zenodo integration for Nextcloud/ownCloud
 
-Written 2016 by Lars Næsbye Christensen, DeIC
-Reworked 2017 by Frederik Orellana, DeIC
+Written 2016 by Lars Næsbye Christensen, DeIC.
+Reworked 2017 by Frederik Orellana, DeIC.
 
 Allows sending a file or folder to [Zenodo](http://zenodo.org) from within ownCloud/Nextcloud.
 Simply click the 'Zenodo' hover action button in the filelist and fille in metadata.
