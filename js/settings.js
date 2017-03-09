@@ -4,16 +4,18 @@ $(document).ready(function() {
 	$('#tokensubmit').click(function() {
 		clientAppID = $('#clientAppID').val();
 		clientSecret = $('#clientSecret').val();
+		communities = $('#communities').val();
 
 		$.ajax(OC.linkTo('files_zenodo', 'ajax/set_tokens.php'), {
 			type: "POST",
 			data: {
 				clientAppID: clientAppID,
-				clientSecret: clientSecret
+				clientSecret: clientSecret,
+				communities: communities
 			},
 			dataType: 'json',
 			success: function(s) {
-				 OC.msg.finishedSaving('#zenodostatus', {status: 'success', data: {message: "Client ID/secret stored."}});
+				 OC.msg.finishedSaving('#zenodostatus', {status: 'success', data: {message: "Client ID/secret + communities stored."}});
 					$('#zenodostatus').css("color", "green");
 			}
 		});
@@ -26,6 +28,7 @@ $(document).ready(function() {
 		success: function(s) {
 			$('#clientAppID').val(s['clientAppID']);
 			$('#clientSecret').val( s['clientSecret']);
+			$('#communities').val( s['communities']);
 		}
 	});
 

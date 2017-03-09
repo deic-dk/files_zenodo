@@ -19,6 +19,14 @@
   <input type='text' id='clientSecret' title='Client app secret for Zenodo deposits' style='width:475px'>
   </td>
   </tr>
+   <tr>
+  <td>
+  <label for='communities'>Communities:</label>
+  </td>
+  <td>
+  <input type='text' id='communities' title='Curated Zenodo communities' style='width:475px'>
+  </td>
+  </tr>
   </table>
   <br>
   <input type='submit' value='Save' id='tokensubmit' title='Store ID+secret'>
