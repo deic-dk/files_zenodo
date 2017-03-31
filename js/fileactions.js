@@ -114,7 +114,7 @@ function styleMetaPopup(fileid, filename) {
 		
 		// Very theme/apps-specific. TODO: generalize
 		var userAffiliationI = $('#left-apps-menu .nav i.icon-gift');
-		var userAffiliationSpan;
+		var userAffiliationSpan = null;
 		if(userAffiliationI.length){
 			userAffiliationSpan = userAffiliationI.parent().find('span');
 		}
@@ -201,7 +201,7 @@ function styleMetaPopup(fileid, filename) {
 		$('#fileList tr[data-id='+fileid+']').attr('zenodo_uploaded', 'yes');
 	}
 	
-	$('.ui-dialog .popup_ok').text('Next: Upload file Zenodo');
+	$('.ui-dialog .popup_ok').text('Next: Deposit file to Zenodo');
 	
 }
 
