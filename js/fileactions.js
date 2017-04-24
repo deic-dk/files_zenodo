@@ -24,6 +24,9 @@ function openZenodoAuth(fileid) {
 		OC.dialogs.confirm('This file has already been published. Altering its metadata or re-uploading is not recommended. Continue anyway?',
 				'Already published', function(res){if(res){doOpenZenodoAuth(fileid);}}, false);
 	}
+	else{
+		doOpenZenodoAuth(fileid);
+	}
  }
 
 function doOpenZenodoAuth(fileid){
@@ -82,7 +85,7 @@ function getCommunities(callback){
 		type: "GET",
 		dataType: 'json',
 		success: function(s) {
-			if(typeof s['communities'] != 'undefined'){
+			if(typeof s['communities'] != 'undefined' && s['communities'] != null){
 				communities = s.communities;
 			}
 			else{
