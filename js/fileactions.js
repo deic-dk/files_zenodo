@@ -21,7 +21,7 @@ function openZenodoAuth(fileid) {
 	
 	var uploaded = $('#fileList tr[data-id='+fileid+']').attr('zenodo_uploaded');
 	if(uploaded=='yes'){
-		OC.dialogs.confirm('This file has already been published. Altering its metadata or re-uploading is not recommended. Continue anyway?',
+		OC.dialogs.confirm('This file has already been deposited. Altering its metadata or re-uploading is not recommended. Continue anyway?',
 				'Already published', function(res){if(res){doOpenZenodoAuth(fileid);}}, false);
 	}
 	else{
@@ -187,7 +187,8 @@ function styleMetaPopup(fileid, filename) {
 		$('.ui-dialog .edit[value=embargo_date]').parent().addClass('hidden');
 	}
 	
-	$('.ui-dialog .edit[value=deposition_id]').parent().addClass('hidden');
+	//$('.ui-dialog .edit[value=deposition_id]').parent().addClass('hidden');
+	$('.ui-dialog .edit[value=deposition_id]').parent().find('input.value').attr('placeholder', 'Fill in only if adding file to existing deposition');
 	$('.ui-dialog .edit[value=uploaded]').parent().addClass('hidden');
 	
 	var communitiesInput = $('.ui-dialog .edit[value=communities]').parent().find('input.value');

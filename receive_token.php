@@ -96,7 +96,7 @@ if(!empty($metadata->getValue('deposition_id'))){
 else{
 	$url = $apiURL."?access_token=".$token;
 	$content = '{"metadata":'.json_encode($metadata).'}';
-	\OCP\Util::writeLog('files_zenodo','Creating record at: '.$url.'. Metadata: '.$content, \OC_Log::WARN);
+	\OCP\Util::writeLog('files_zenodo','Creating record at: '.$url.'. Metadata: '.serialize($metadata), \OC_Log::WARN);
 	$curl = curlInit($url, $content);
 	$json_response = curl_exec($curl);
 	$status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
@@ -116,11 +116,11 @@ else{
 	}
 }
 
-// Upload file if not already uploaded
-if(!empty($metadata->getValue('uploaded')) && $metadata->getValue('uploaded')=='yes'){
+// Upload file if not already uploaded - change: we allow reupload w. warning.
+/*if(!empty($metadata->getValue('uploaded')) && $metadata->getValue('uploaded')=='yes'){
 	echo '<div class="upload_info alert alert-info">File already uploaded.</div>';
 }
-elseif(!empty($depositId)){
+else*/if(!empty($depositId)){
 	echo '<span class="deposit_id">'.$depositId.'</span>';
 	$filepath = \OC\Files\Filesystem::getpath($fileId);
 	$group = null;
