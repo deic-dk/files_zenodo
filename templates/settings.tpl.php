@@ -8,7 +8,7 @@
   <label for='clientAppID'>Client ID:</label>
   </td>
   <td>
-  <input type='text' id='clientAppID' title='Client app ID for Zenodo deposits' style='width:475px'>
+  <input type='text' id='clientAppID' title='Client app ID for Zenodo deposits' style='width:475px' />
   </td>
   </tr>
   <tr>
@@ -16,7 +16,7 @@
   <label for='clientSecret'>Client secret:</label>
   </td>
   <td>
-  <input type='text' id='clientSecret' title='Client app secret for Zenodo deposits' style='width:475px'>
+  <input type='text' id='clientSecret' title='Client app secret for Zenodo deposits' style='width:475px' />
   </td>
   </tr>
    <tr>
@@ -24,12 +24,12 @@
   <label for='communities'>Communities:</label>
   </td>
   <td>
-  <input type='text' id='communities' title='Curated Zenodo communities' style='width:475px'>
+  <input type='text' id='communities' title='Curated Zenodo communities' style='width:475px' />
   </td>
   </tr>
   </table>
   <br>
-  <input type='submit' value='Save' id='tokensubmit' title='Store ID+secret'>
+  <input type='submit' value='Save' id='tokensubmit' title='Store ID+secret' />
   <label id='zenodostatus'></label>
 </fieldset>
 

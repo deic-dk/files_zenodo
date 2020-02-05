@@ -1,7 +1,7 @@
 <?php
 
-$depositURL = "https://zenodo.org/deposit/";
-$apiURL = "https://zenodo.org/api/deposit/depositions/";
+$depositURL = "https://zenodo.org/deposit";
+$apiURL = "https://zenodo.org/api/deposit/depositions";
 
 \OCP\Util::writeLog('files_zenodo', 'REQUEST_URI: '.$_SERVER['REQUEST_URI'].'-->'.
 		serialize($_GET), \OC_Log::WARN);
@@ -157,7 +157,7 @@ else*/if(!empty($depositId)){
 	$absolutePath = realpath($absolutePath);
 	$cFile = '@' . stripslashes($absolutePath);
 	$content = array('name'=>$filename, 'file'=>$cFile);
-	$url = $apiURL.$depositId."/files?access_token=".$token;
+	$url = $apiURL."/".$depositId."/files?access_token=".$token;
 	
 	\OCP\Util::writeLog('files_zenodo','Uploading '.$filepath.' ('.$absolutePath.') to: '.
 			$url.'. Content: '.$cFile, \OC_Log::WARN);
