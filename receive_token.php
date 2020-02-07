@@ -90,6 +90,7 @@ $tmpl->printPage();
 flush();
 
 // Create record if not already created
+unset($metadata->metadata['uploaded']);
 if(!empty($metadata->getValue('deposition_id'))){
 	$depositId = $metadata->getValue('deposition_id');
 }

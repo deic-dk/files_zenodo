@@ -127,7 +127,7 @@ function styleMetaPopup(fileid, filename) {
 		}
 		
 		getOrcid(function(orcid){
-			creatorsInput.val('[{Author: '+userFullName+', Affiliation: '+userAffiliation+(orcid.length?', orcid: '+orcid:'')+'}]');
+			creatorsInput.val('[{"name": "'+userFullName+'", "affiliation": "'+userAffiliation+(orcid.length?'", "orcid": "'+orcid+'"':'"')+'}]');
 		});
 	}
 	

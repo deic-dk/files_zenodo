@@ -22,7 +22,7 @@ function setProgressBarProgress(percentDone){
 		setProgressBarProgress(percentDone);
 		if(percentDone==100){
 			var url = $(".deposit_link").attr("href");
-			$(".deposit_link").attr("href", url+$(".deposit_id").text());
+			$(".deposit_link").attr("href", url+"/"+$(".deposit_id").text());
 			$(".deposit_link.link").text(url+"/"+$(".deposit_id").text());
 			$(".upload_info").removeClass("alert-info");
 			$(".upload_info").addClass("alert-success");
