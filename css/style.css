@@ -5,3 +5,8 @@
 pb, .deposit_id {
 	display: none;
 }
+
+#depositBaseURL {
+    padding-top: 1px;
+    margin-right: 5px;
+}

@@ -2,7 +2,16 @@
 <h2><img src="/apps/files_zenodo/img/zenodo.svg" style='vertical-align: baseline; margin-right:25px;'> Research. Shared.</h2>
   <br>
   <p>Set the ID and secret of your client app registered with Zenodo.</p>
+  <p>To allow uploading to multiple services, enter space-separated lists of URLs, client IDs and client secrets.</p>
   <table>
+  <tr>
+  <td>
+  <label for='baseURL'>Base URL:</label>
+  </td>
+  <td>
+  <input type='text' id='baseURL' title='Base URL for Zenodo API endpoints' style='width:475px' />
+  </td>
+  </tr>
   <tr>
   <td>
   <label for='clientAppID'>Client ID:</label>
@@ -29,7 +38,7 @@
   </tr>
   </table>
   <br>
-  <input type='submit' value='Save' id='tokensubmit' title='Store ID+secret' />
+  <input type='submit' value='Save' id='tokensubmit' title='Store settings' />
   <label id='zenodostatus'></label>
 </fieldset>
 

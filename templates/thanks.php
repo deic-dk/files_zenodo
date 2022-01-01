@@ -24,12 +24,12 @@
 			</div>
 		</div>
 		<div class="upload_info alert alert-info">Hang on - uploading...</div>
-		<h2>
-			Thank you for uploading your data to
-			<a target="_blank" class="deposit_link" href="<?php echo $_['url'];?>"><img class="zenodo_img" src="/apps/files_zenodo/img/zenodo.svg" /></a>
-		</h2>
+		<h3>
+			Thank you for uploading your data to 
+			<a target="_blank" href="<?php echo $_['baseurl'];?>"><?php echo(preg_replace('|^https*://([^/]*)/*|', '$1', $_['baseurl']));?></a>
+		</h3>
 		<div>
-			Edit your new publication at <a target="_blank" class="deposit_link link" href="<?php echo $_['url'];?>"><?php echo $_['url'];?></a>.
+			Edit your new publication at <a target="_blank" id="deposit_link" class="link" href="<?php echo $_['depositurl'];?>"><?php echo $_['depositurl'];?></a>.
 		</div>
 	</div>
 	</body>

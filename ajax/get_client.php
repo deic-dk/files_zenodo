@@ -1,5 +1,6 @@
 <?php
 
+$baseURL  = OC_Appconfig::getValue('files_zenodo', 'baseURL');
 $clientAppID  = OC_Appconfig::getValue('files_zenodo', 'clientAppID');
 $clientSecret = OC_Appconfig::getValue('files_zenodo', 'clientSecret');
 
@@ -9,6 +10,7 @@ $redirectURL = (empty($_SERVER['HTTPS'])?'http':'https') . '://' . $_SERVER['SER
 
 
 OCP\JSON::success(array(
+	'baseURL' => $baseURL,
 	'redirectURL' => $redirectURL,
 	'clientAppID' => $clientAppID,
 	'clientSecret' => $clientSecret

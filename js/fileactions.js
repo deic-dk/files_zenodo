@@ -2,14 +2,16 @@ var oauthWindow;
 var clientAppID;
 var clientSecret;
 var redirectUrl;
+var depositBaseURL;
 
-var metaPopupTitle = "Metadata for Zenodo upload";
+var metaPopupTitle = "Metadata for  deposit";
 
 function getClient(){
 	$.ajax(OC.linkTo('files_zenodo', 'ajax/get_client.php'), {
 		type: "GET",
 		dataType: 'json',
 		success: function(s) {
+			depositBaseURL = s['baseURL'];
 			clientAppID = s['clientAppID'];
 			clientSecret = s['clientSecret'];
 			redirectUrl = s['redirectURL'];
@@ -18,24 +20,30 @@ function getClient(){
 }
 
 function openZenodoAuth(fileid) {
-	
+	var baseURL = $('#selectedDepositBaseURL').val();
+	var myClientAppID = $('#selectedClientAppID').val();
+	var myClientSecret = $('#selectedClientSecret').val();
+	if(!baseURL){
+		OC.dialogs.alert(t('files_zenodo', 'Please choose a destination.'), t('files_zenodo', 'No destination'), function(res){}, true);
+		return false;
+	}
 	var uploaded = $('#fileList tr[data-id='+fileid+']').attr('zenodo_uploaded');
 	if(uploaded=='yes'){
-		OC.dialogs.confirm('This file has already been deposited. Altering its metadata or re-uploading is not recommended. Continue anyway?',
-				'Already published', function(res){if(res){doOpenZenodoAuth(fileid);}}, false);
+		OC.dialogs.confirm(t('files_zenodo', 'This file has already been deposited. Altering its metadata or re-uploading is not recommended. Continue anyway?'),
+				t('files_zenodo', 'Already uploaded'), function(res){if(res){doOpenZenodoAuth(fileid, baseURL, myClientAppID, myClientSecret);}}, false);
 	}
 	else{
-		doOpenZenodoAuth(fileid);
+		doOpenZenodoAuth(fileid, baseURL, myClientAppID, myClientSecret);
 	}
  }
 
-function doOpenZenodoAuth(fileid){
-	var url = "https://zenodo.org/oauth/authorize?"+
-	"client_id="+clientAppID+"&scope=deposit%3Awrite+deposit%3Aactions&"+
+function doOpenZenodoAuth(fileid, baseURL, myClientAppID, myClientSecret){
+	var url = baseURL+"/oauth/authorize?"+
+	"client_id="+myClientAppID+"&scope=deposit%3Awrite+deposit%3Aactions&"+
 	"redirect_uri="+redirectUrl+"&response_type=token&state="+fileid;
 //alert(url);
-if(!clientAppID){
-	OC.dialogs.alert("Please ask your administrator to set a 'Zenodo' app id.", "No appid", function(res){}, true);
+	if(!clientAppID){
+	OC.dialogs.alert(t('files_zenodo', "'Please ask your administrator to set a 'Zenodo' app ID."), t('files_zenodo', "No app ID"), function(res){}, true);
 	return false;
 }
 var oauthWindow = window.open(url, "_blank", 
@@ -158,7 +166,7 @@ function styleMetaPopup(fileid, filename) {
 	if(!publicationDateInput.val().length){
 		var today = new Date();
 		var dd = today.getDate();
-		var mm = today.getMonth();//January is 0!
+		var mm = today.getMonth()+1;//January is 0!
 		var yyyy = today.getFullYear();
 		var date = yyyy+'-'+mm+'-'+dd;
 		publicationDateInput.val(date);
@@ -190,7 +198,10 @@ function styleMetaPopup(fileid, filename) {
 	//$('.ui-dialog .edit[value=deposition_id]').parent().addClass('hidden');
 	$('.ui-dialog .edit[value=deposition_id]').parent().find('input.value').attr('placeholder', 'Fill in only if adding file to existing deposition');
 	$('.ui-dialog .edit[value=uploaded]').parent().addClass('hidden');
-	
+	$('.ui-dialog .edit[value=bucket]').parent().addClass('hidden');
+	var url = $('.ui-dialog .edit[value=url]').parent().find('input.value').val();
+	$('.ui-dialog .edit[value=url]').parent().addClass('hidden');
+
 	var communitiesInput = $('.ui-dialog .edit[value=communities]').parent().find('input.value');
 	if(!communitiesInput.val().length){
 		getCommunities(function(communities){
@@ -204,18 +215,60 @@ function styleMetaPopup(fileid, filename) {
 	if($('.ui-dialog .edit[value=uploaded]').parent().find('input.value').val()=='yes'){
 		$('#fileList tr[data-id='+fileid+']').attr('zenodo_uploaded', 'yes');
 	}
-	
-	$('.ui-dialog .popup_ok').text('Next: Deposit file to Zenodo');
-	
+	$('.ui-dialog .popup_ok').after("<select id='depositBaseURL'></select>");
+	if(!depositBaseURL){
+		OC.dialogs.alert("Please ask your administrator to set a deposit base URL.", "No base URL", function(res){}, true);
+		return false;
+	}
+	var baseURLs = depositBaseURL.split(" ");
+	if(baseURLs.length>1){
+		$('#depositBaseURL').append('<option value=""></option>');
+	}
+	var selected = '';
+	var thisbaseurl;
+	jQuery.each(baseURLs, function(i, data) {
+		selected = '';
+		thisbaseurl = data.trim();
+		if(url && url.startsWith(thisbaseurl)){
+			selected = ' selected="selected"';
+			$('#selectedDepositBaseURL').val(thisbaseurl);
+			var clientAppIDs = clientAppID.split(" ");
+			$('#selectedClientAppID').val(clientAppIDs[i].trim());
+			var clientSecrets = clientSecret.split(" ");
+			$('#selectedClientSecret').val(clientSecrets[i].trim());
+		}
+		$('#depositBaseURL').append('<option value="'+thisbaseurl+'"'+selected+'>'+thisbaseurl+'</option>');
+	});
+	if(baseURLs.length==1){
+		setDepositData();
+	}
+	$('#depositBaseURL').change(function(el){
+		setDepositData();
+	});
+	$('.ui-dialog .popup_ok').text(t('files_zenodo', 'Next: Deposit file to')+' ');
+}
+
+function setDepositData(){
+	var baseURLs = depositBaseURL.split(" ");
+	$('#selectedDepositBaseURL').val($('#depositBaseURL').val());
+	var i = $('#depositBaseURL').prop('selectedIndex')-(baseURLs.length>1?1:0);
+	var clientAppIDs = clientAppID.split(" ");
+	$('#selectedClientAppID').val(clientAppIDs[i].trim());
+	var clientSecrets = clientSecret.split(" ");
+	$('#selectedClientSecret').val(clientSecrets[i].trim());
 }
 
 $(document).ready(function() {
 	
+	$('body').prepend('<input type="hidden" id="selectedDepositBaseURL"></input>');
+	$('body').prepend('<input type="hidden" id="selectedClientAppID"></input>');
+	$('body').prepend('<input type="hidden" id="selectedClientSecret"></input>');
+
 	getClient();
 	
 	if (typeof FileActions !== 'undefined') {
 		// Register our function with ownCloud - files, not folders
-		FileActions.register('file', t('files_zenodo', 'Zenodo'), OC.PERMISSION_READ, OC.imagePath('files_zenodo', 'zenodo_z'),
+		FileActions.register('file', t('files_zenodo', 'Zenodo'), OC.PERMISSION_READ, OC.imagePath('files_zenodo', 'forward'),
 			function(filename, context) {
 				if (scanFiles.scanning) {
 					return;
@@ -238,7 +291,8 @@ $(document).ready(function() {
 					else{
 						OC.dialogs.alert('Please install and enable the app metadata.', 'No metadata', function(res){}, true);
 					}
-				} else {
+				}
+				else {
 					$("#dropdown").slideUp(200, function() {
 						$(this).remove();
 					});
@@ -253,6 +307,6 @@ $(document).ready(function() {
 			!$('.nav-sidebar li[data-id="trash"] a.active').length &&
 			(typeof OCA.Files !== 'undefined' && OCA.Files.FileList.prototype.getGetParam('view')!='trashbin')){
 		$('#headerName .selectedActions').prepend(
-			'<a class="zenodo btn btn-xs btn-default" id="zenodo" href=""><i class="icon icon-zenodo"></i>' + t('files_zenodo', ' Publish') + '</a>&nbsp;');
+			'<a class="zenodo btn btn-xs btn-default" id="zenodo" href=""><i class="icon icon-forward"></i>' + t('files_zenodo', ' Publish') + '</a>&nbsp;');
 	}*/
 });

@@ -2,9 +2,10 @@
 <info>
     <id>files_zenodo</id>
     <name>Files Zenodo</name>
-    <description>Publish to Zenodo (zenodo.org)</description>
+    <description>Publish to Zenodo services</description>
     <licence>AGPL</licence>
     <author>Lars Næsbye Christensen, DeIC</author>
+    <author>Frederik Orellana, DeIC</author>
     <version>1.0</version>
     <website>https://github.com/deic-dk/files_zenodo</website>
     <bugs>https://github.com/deic-dk/files_zenodo/issues</bugs>
