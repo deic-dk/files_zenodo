@@ -196,7 +196,7 @@ function styleMetaPopup(fileid, filename) {
 	}
 	
 	//$('.ui-dialog .edit[value=deposition_id]').parent().addClass('hidden');
-	$('.ui-dialog .edit[value=deposition_id]').parent().find('input.value').attr('placeholder', 'Fill in only if adding file to existing deposition');
+	$('.ui-dialog .edit[value=deposition_id]').parent().find('input.value').attr('placeholder', 'Fill in only if adding file to existing deposit');
 	$('.ui-dialog .edit[value=uploaded]').parent().addClass('hidden');
 	$('.ui-dialog .edit[value=bucket]').parent().addClass('hidden');
 	var url = $('.ui-dialog .edit[value=url]').parent().find('input.value').val();
