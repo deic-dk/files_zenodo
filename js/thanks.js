@@ -27,6 +27,8 @@ function setProgressBarProgress(percentDone){
 			$(".upload_info").removeClass("alert-info");
 			$(".upload_info").addClass("alert-success");
 			$(".upload_info").text("Done!");
+			$('div.close_popup').removeClass('hidden');
+			$('div.close_popup').click(function(ev){window.close()});
 			clearInterval(timer);
 		}
 	}, 1000);

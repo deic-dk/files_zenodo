@@ -105,6 +105,7 @@ function getCommunities(callback){
 }
 
 function styleMetaPopup(fileid, filename) {
+	console.log(fileid);
 	
 	var titleInput = $('.ui-dialog .edit[value=title]').parent().find('input.value');
 	if(!titleInput.val().length){
@@ -245,7 +246,7 @@ function styleMetaPopup(fileid, filename) {
 	$('#depositBaseURL').change(function(el){
 		setDepositData();
 	});
-	$('.ui-dialog .popup_ok').text(t('files_zenodo', 'Next: Deposit file to')+' ');
+	$('.ui-dialog .popup_ok').text(t('files_zenodo', 'Next: Deposit to')+' ');
 }
 
 function setDepositData(){
@@ -268,7 +269,7 @@ $(document).ready(function() {
 	
 	if (typeof FileActions !== 'undefined') {
 		// Register our function with ownCloud - files, not folders
-		FileActions.register('file', t('files_zenodo', 'Zenodo'), OC.PERMISSION_READ, OC.imagePath('files_zenodo', 'forward'),
+		FileActions.register(/*'file'*/'all', t('files_zenodo', 'Zenodo'), OC.PERMISSION_READ, OC.imagePath('files_zenodo', 'forward'),
 			function(filename, context) {
 				if (scanFiles.scanning) {
 					return;

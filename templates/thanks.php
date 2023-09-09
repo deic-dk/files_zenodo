@@ -31,5 +31,12 @@
 		<div>
 			Edit your new publication at <a target="_blank" id="deposit_link" class="link" href="<?php echo $_['depositurl'];?>"><?php echo $_['depositurl'];?></a>.
 		</div>
+		<div>
+			&nbsp;
+		</div>
+		<div class="center hidden close_popup">
+			<a href="#" class="btn btn-default">Close</a>
+		</div>
+		
 	</div>
 	</body>

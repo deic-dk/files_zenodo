@@ -4,6 +4,8 @@
 
 require_once 'base.php';
 
+OCP\JSON::checkAppEnabled('files_sharding');
+
 \OCP\Util::writeLog('files_zenodo', 'REQUEST_URI: '.$_SERVER['REQUEST_URI'].', HTTP_REFERER: '.$_SERVER['HTTP_REFERER'].'-->'.
 		serialize($_GET), \OC_Log::WARN);
 
@@ -152,8 +154,9 @@ if(empty($metadata->getValue('deposition_id'))){
 	}
 	curl_close($curl);
 	if(!empty($response) && !empty($response['id'])){
+		\OCP\Util::writeLog('files_zenodo','Got bucket and deposit ID: '.$response['links']['bucket'].' : '.$response['id'], \OC_Log::WARN);
 		$depositId = $response['id'];
-		// Quickfix. This is due to what looks like a zenodo bug...
+		// Quickfix. This is due to what looks like an Invenio/Zenodo software bug...
 		// TODO: fix on sciencerepository
 		$bucket = str_replace('http://sciencerepository.dk:5000/', 'https://sciencerepository.dk/', $response['links']['bucket']);
 		$bucket = str_replace('http://sciencerepository.dk/', 'https://sciencerepository.dk/',$bucket);
@@ -216,44 +219,67 @@ if(!empty($depositId)){
 		die;
 	}
 
-	if(empty($bucket)){
-		// As of PHP 5.6 no longer works...
-		//$cFile = '@' . stripslashes($absolutePath);
-		$cFile = makeCurlFile($absolutePath);
-		$content = array('name'=>$filename, 'file'=>$cFile);
-		$url = $apiURL."/".$depositId."/files?access_token=".$token;
-		$curl = curlInit($url, $content, $absolutePath);
-	}
-	else{
-		$url = $bucket."/".$filename."?access_token=".$token;
-		$fh = fopen($absolutePath, 'r');
-		$curl = curlInit($url, null, $absolutePath, true, $fh);
+	// If we're uploading a directory, first zip it to a tmp file
+	if(is_dir($absolutePath)){
+		\OCA\FilesSharding\Lib::sendZipHeaders($filename.".zip");
+		$tmpFile = tempnam(sys_get_temp_dir(), 'files_zenodo_').".zip";
+		exec("PATH=\$PATH:/usr/local/bin; cd '".dirname($absolutePath)."'; zip -r '".$tmpFile."' ".$filename);
+		$absolutePath = $tmpFile;
+		$filename = $filename.".zip";
 	}
 	
-	\OCP\Util::writeLog('files_zenodo','Uploading '.$filepath.' ('.$absolutePath.') to: '.
-			$url.', Content: '.(empty($content)?'':serialize($content)).
-			', Bucket: '.(empty($bucket)?'':$bucket), \OC_Log::WARN);
-	
-	$json_response = curl_exec($curl);
+	// Give time to create record
+	sleep(3);
+	// Try 3 times to upload
+	$trials = 3;
+	for($i = 0; $i < $trials; $i++){
+
+		if(empty($bucket)){
+			// As of PHP 5.6 no longer works...
+			//$cFile = '@' . stripslashes($absolutePath);
+			$cFile = makeCurlFile($absolutePath);
+			$content = array('name'=>$filename, 'file'=>$cFile);
+			$url = $apiURL."/".$depositId."/files?access_token=".$token;
+			$curl = curlInit($url, $content, $absolutePath);
+		}
+		else{
+			$url = $bucket."/".rawurlencode($filename)."?access_token=".$token;
+			$fh = fopen($absolutePath, 'r');
+			$curl = curlInit($url, null, $absolutePath, true, $fh);
+		}
+		
+		\OCP\Util::writeLog('files_zenodo','Uploading '.$i.': '.$filepath.' ('.$absolutePath.') to: '.
+				$url.', Content: '.(empty($content)?'':serialize($content)).
+				', Bucket: '.(empty($bucket)?'':$bucket), \OC_Log::WARN);
+		
+		$json_response = curl_exec($curl);
+		$info = curl_getinfo($curl);
+		$status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+		if($status===0 || $status>=300 || $json_response===null ||
+				$json_response===false){
+			curl_close($curl);
+			if($i<$trials-1){
+				continue;
+			}
+			echo('ERROR: bad response. '.$json_response);
+			\OCP\Util::writeLog('files_zenodo','ERROR: '.
+					$json_response.' -- '.$status.' -- '.serialize($info), \OC_Log::ERROR);
+			die;
+		}
+		else{
+			// Flag as uploaded
+			$uploadedKey = \OCA\meta_data\Tags::getKeyID($zenodoTagID, 'uploaded', $user);
+			\OCA\meta_data\Tags::updateFileKeyVal($fileId, $zenodoTagID, $uploadedKey, 'yes');
+			curl_close($curl);
+			break;
+		}
+	}
 	if(!empty($fh)){
 		fclose($fh);
 	}
-	$info = curl_getinfo($curl);
-	$status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-	
-	if($status===0 || $status>=300 || $json_response===null || $json_response===false){
-		echo('ERROR: bad response. '.$json_response);
-		\OCP\Util::writeLog('files_zenodo','ERROR: '.
-				$json_response.' -- '.$status.' -- '.serialize($info), \OC_Log::ERROR);
-		die;
+	if(!empty($tmpFile)){
+		unlink($tmpFile);
 	}
-	else{
-		// Flag as uploaded
-		$uploadedKey = \OCA\meta_data\Tags::getKeyID($zenodoTagID, 'uploaded', $user);
-		\OCA\meta_data\Tags::updateFileKeyVal($fileId, $zenodoTagID, $uploadedKey, 'yes');
-	}
-	
-	curl_close($curl);
 }
 else{
 	OCP\JSON::error();
