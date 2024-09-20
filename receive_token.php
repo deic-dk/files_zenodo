@@ -111,7 +111,7 @@ $zenodoTagID = \OCA\meta_data\Tags::getTagID('Zenodo', $user);
 
 $fileTags = \OCA\meta_data\Tags::getFileTags(array($fileId), $user, array($user));
 if(!in_array($zenodoTagID, $fileTags[$fileId])){
-	echo('ERROR: Zenodo tag not found or not public. '.$user);
+	echo('ERROR: Zenodo tag ('.$zenodoTagID.') not found for. '.$fileId. ' ('.$user.')');
 	die;
 }
 
@@ -136,6 +136,19 @@ unset($metadata->metadata['uploaded']);
 if(!empty($metadata->getValue('deposition_id'))){
 	$depositId = $metadata->getValue('deposition_id');
 	$bucket = $metadata->getValue('bucket');
+}
+// If part of multiple publish, title should not be set. Set it to filename.
+if(empty($metadata->getValue('title'))){
+	$filepath = \OC\Files\Filesystem::getpath($fileId);
+	$group = null;
+	if(empty($filepath) && \OCP\App::isEnabled('user_group_admin')){
+		// Not found in files/, try user_group_admin/
+		if(empty($fs)){
+			$fs = \OCP\Files::getStorage('user_group_admin');
+		}
+		$filepath = $fs->getPath($fileId);
+	}
+	$metadata->metadata['title'] = basename($filepath);
 }
 // If not already created, create record
 if(empty($metadata->getValue('deposition_id'))){

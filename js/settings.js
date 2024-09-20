@@ -6,6 +6,8 @@ $(document).ready(function() {
 		clientAppID = $('#clientAppID').val();
 		clientSecret = $('#clientSecret').val();
 		communities = $('#communities').val();
+		mediaCmsURL = $('#mediaCmsURL').val();
+		mediaCmsToken = $('#mediaCmsToken').val();
 
 		$.ajax(OC.linkTo('files_zenodo', 'ajax/set_tokens.php'), {
 			type: "POST",
@@ -13,11 +15,13 @@ $(document).ready(function() {
 				baseURL: baseURL,
 				clientAppID: clientAppID,
 				clientSecret: clientSecret,
-				communities: communities
+				communities: communities,
+				mediaCmsURL: mediaCmsURL,
+				mediaCmsToken: mediaCmsToken
 			},
 			dataType: 'json',
 			success: function(s) {
-				 OC.msg.finishedSaving('#zenodostatus', {status: 'success', data: {message: "Zenodo settings stored."}});
+				 OC.msg.finishedSaving('#zenodostatus', {status: 'success', data: {message: "Publishing settings stored."}});
 					$('#zenodostatus').css("color", "green");
 			}
 		});
@@ -32,6 +36,8 @@ $(document).ready(function() {
 			$('#clientAppID').val(s['clientAppID']);
 			$('#clientSecret').val( s['clientSecret']);
 			$('#communities').val( s['communities']);
+			$('#mediaCmsURL').val( s['mediaCmsURL']);
+			$('#mediaCmsToken').val( s['mediaCmsToken']);
 		}
 	});
 

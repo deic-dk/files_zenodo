@@ -4,7 +4,67 @@ var clientSecret;
 var redirectUrl;
 var depositBaseURL;
 
-var metaPopupTitle = "Metadata for  deposit";
+var metaPopupTitle = t('files_zenodo', 'Metadata for deposit');
+
+function publishMultiple(event){
+	// Publish multiple files
+	event.stopPropagation();
+	event.preventDefault();
+	if($('#publishAction').length>0 && !$(event.target).is('#publishSelect')){
+		$('#publishAction').detach();
+		return false;
+	}
+	var files = FileList.getSelectedFiles();
+	var mime = null;
+	var onlyZenodo = false;
+	for( var i=0;i<files.length;++i){
+		// We cannot publish directories
+		if(files[i].mimetype=='httpd/unix-directory'){
+			return false;
+		}
+		// For mixed mimetypes we can only publish to Zenodo
+		if(i>0 && files[i].mimetype!=mime){
+			onlyZenodo = true;
+			break;
+		}
+		mime = files[i].mimetype;
+	}
+	publishCreateSelect(files[0].name,  files[0].mimetype, onlyZenodo, $('#headerName .selectedActions .publish:visible'), true);
+	$('#publishSelect').on('change', function(ev){
+		 ev.stopImmediatePropagation();
+		var tagname = $(ev.target).val();
+		if(typeof editMeta !== 'undefined'){
+			for( var i=0;i<files.length;++i){
+				var tagid = $('tr[data-id='+files[i].id+']').find('span.tagtext').filter(function() { return ($(this).text()===tagname) }).closest('.label').attr('data-tag');
+				if(typeof tagid == 'undefined' || !tagid.length){
+					addTag(files[i].id, files[i].name, tagname, false);
+				}
+			}
+		getTagID(tagname,
+			function(tagid){
+			if(tagname==='Zenodo'){
+				editMeta(metaPopupTitle, files[0].name, files[0].id, tagid, styleMetaPopup, openZenodoAuth);
+			}
+			else if(tagname==='MediaCMS'){
+				editMeta(metaPopupTitle, files[0].name, files[0].id, tagid, setMediaParams, publishMedia);
+			}
+			else if(tagname==='ScienceNotebooks'){
+				editMeta(metaPopupTitle, files[0].name, files[0].id, tagid, setNotebookParams, publishNotebook);
+			}
+		});
+		}
+	});
+	return false;
+};
+
+function addSelectedPublishAction(){
+	$('#headerName .selectedActions').each(function(){
+		if(!$(this).find('.publish').length){
+			$('<a class="publish btn btn-xs btn-default" href=""><i class="icon icon-forward"></i>'+t('files_zenodo',' Publish')+'</a>').prependTo($(this));
+			$(this).find('.publish').click(publishMultiple)
+		}
+	});
+}
 
 function getClient(){
 	$.ajax(OC.linkTo('files_zenodo', 'ajax/get_client.php'), {
@@ -19,7 +79,87 @@ function getClient(){
 	});
 }
 
-function openZenodoAuth(fileid) {
+function publishMedia(fileid, filenames) {
+	var title = $('#meta_data_container span.keyname:contains("Title")').parent().find('input.value').last().val();
+	var description = $('#meta_data_container span.keyname:contains("Description")').parent().find('input.value').last().val();
+	$('button.popup_ok').css('background-image', 'url('+ OC.imagePath('core', 'loading-small.gif') + ')').css('background-repeat', 'no-repeat').css('background-position', 'center center').css('opacity', '.6').css('cursor', 'default').off();
+	// Add message field
+	$('.ui-dialog-buttonset').prepend('<div class="msg"></div>')
+	var fileids = (''+fileid).split(':');
+	for(var i=0; i<fileids.length; ++i){
+		$('div.msg').text("Uploading "+filenames[i]+"...");
+		$.ajax({
+			url: OC.filePath('files_zenodo', 'ajax', 'mediacms_publish.php'),
+			async: true,
+			data: {
+				fileid: fileids[i],
+				filename: filenames[i],
+				title: title,
+				description: description,
+				dataType: 'json',
+				i: (''+(i+1))
+			},
+			type: "POST",
+			success: function(data) {
+				if(parseInt(data['i'])==fileids.length){
+			    $('div.msg').text("All done.");
+					$('button.popup_ok').css('background-image', '').css('opacity', '1.0').css('cursor', 'pointer').on();
+					$('body').find('.ui-dialog').delay(2000)
+					.queue(function (next) { 
+						$(this).remove();
+						next(); 
+					});
+				}
+			},
+			error: function(data) {
+				$('button.popup_ok').css('background-image', '').css('opacity', '1.0').css('cursor', 'pointer').on();
+			},
+		});
+	}
+}
+
+function setMediaParams(){
+	//var title = $('.ui-dialog .edit[value=Title]').parent().find('input.value').val();
+	$('.ui-dialog .popup_ok').after("<span class='url'>media.sciencedata.dk</span>");
+	$('.ui-dialog .popup_ok').text(t('files_zenodo', 'Next: Deposit to')+' ');
+}
+
+function setNotebookParams(){
+	//var title = $('.ui-dialog .edit[value=Title]').parent().find('input.value').val();
+	//alert(title);
+}
+
+function publishNotebook(fileid) {
+	var title = $('#meta_data_container span.keyname:contains("Title")').parent().find('input.value').last().val();
+	var description = $('#meta_data_container span.keyname:contains("Description")').parent().find('input.value').last().val();
+	var category = $('#meta_data_container span.keyname:contains("Category")').parent().find('input.value').last().val();
+	$('button.popup_ok').css('background-image', 'url('+ OC.imagePath('core', 'loading-small.gif') + ')').css('background-repeat', 'no-repeat').css('background-position', 'center center').css('opacity', '.6').css('cursor', 'default').off();
+	$.ajax({
+		url: OC.filePath('files_zenodo', 'ajax', 'notebook_publish.php'),
+		async: true,
+		data: {
+			fileid: fileid,
+			filename: filename,
+			title: title,
+			description: description,
+			category: category
+		},
+		type: "POST",
+		success: function(data) {
+			$('button.popup_ok').css('background-image', '').css('opacity', '1.0').css('cursor', 'pointer').on();
+	    $('body').find('.ui-dialog').delay(2000)
+		  .queue(function (next) { 
+				$(this).remove();
+		    next(); 
+		  });
+		},
+		error: function(data) {
+			$('button.popup_ok').css('background-image', '').css('opacity', '1.0').css('cursor', 'pointer').on();
+		},
+	});
+}
+
+function openZenodoAuth(fileid, filenames) {
 	var baseURL = $('#selectedDepositBaseURL').val();
 	var myClientAppID = $('#selectedClientAppID').val();
 	var myClientSecret = $('#selectedClientSecret').val();
@@ -27,30 +167,52 @@ function openZenodoAuth(fileid) {
 		OC.dialogs.alert(t('files_zenodo', 'Please choose a destination.'), t('files_zenodo', 'No destination'), function(res){}, true);
 		return false;
 	}
-	var uploaded = $('#fileList tr[data-id='+fileid+']').attr('zenodo_uploaded');
-	if(uploaded=='yes'){
-		OC.dialogs.confirm(t('files_zenodo', 'This file has already been deposited. Altering its metadata or re-uploading is not recommended. Continue anyway?'),
-				t('files_zenodo', 'Already uploaded'), function(res){if(res){doOpenZenodoAuth(fileid, baseURL, myClientAppID, myClientSecret);}}, false);
-	}
-	else{
-		doOpenZenodoAuth(fileid, baseURL, myClientAppID, myClientSecret);
+	var fileids = (''+fileid).split(':');
+	for(var i=0; i<fileids.length; ++i){
+		var uploaded = $('#fileList tr[data-id='+fileids[i]+']').attr('zenodo_uploaded');
+		if(uploaded=='yes'){
+			OC.dialogs.confirm(t('files_zenodo', 'The file '+filenames[i]+' has already been deposited. Altering its metadata or re-uploading is not recommended. Continue anyway?'),
+					t('files_zenodo', 'Already uploaded'), function(res){if(res){doOpenZenodoAuth(fileid, baseURL, myClientAppID, myClientSecret);}}, false);
+		}
+		else{
+			doOpenZenodoAuth(fileids[i], baseURL, myClientAppID, myClientSecret);
+		}
 	}
  }
 
 function doOpenZenodoAuth(fileid, baseURL, myClientAppID, myClientSecret){
-	var url = baseURL+"/oauth/authorize?"+
-	"client_id="+myClientAppID+"&scope=deposit%3Awrite+deposit%3Aactions&"+
-	"redirect_uri="+redirectUrl+"&response_type=token&state="+fileid;
-//alert(url);
 	if(!clientAppID){
-	OC.dialogs.alert(t('files_zenodo', "'Please ask your administrator to set a 'Zenodo' app ID."), t('files_zenodo', "No app ID"), function(res){}, true);
-	return false;
-}
-var oauthWindow = window.open(url, "_blank", 
-		"toolbar=no, scrollbars=yes, width=620, height=600, top=500, left=500");
+		OC.dialogs.alert(t('files_zenodo', "'Please ask your administrator to set a 'Zenodo' app ID."), t('files_zenodo', "No app ID"), function(res){}, true);
+		return false;
+	}
+	var fileids = (''+fileid).split(':');
+	var url
+	for(var i=0; i<fileids.length; ++i){
+		url = baseURL+"/oauth/authorize?"+
+		"client_id="+myClientAppID+"&scope=deposit%3Awrite+deposit%3Aactions&"+
+		"redirect_uri="+redirectUrl+"&response_type=token&state="+fileids[i];
+		$('body').find('.ui-dialog').remove();
+		oauthWindow = window.open(url, "_blank", 
+			"toolbar=no, scrollbars=yes, width=620, height=600, top=500, left=500");
+	}
 }
 
-function addTag(fileid, filename, tagname){
+function getTagID(tagname, callback){
+	$.ajax({
+		url: OC.filePath('meta_data', 'ajax', 'updateFileInfo.php'),
+		async: false,
+		timeout: 200,
+		data: {
+			tagname: tagname
+		},
+		type: "POST",
+		success: function(tagid) {
+			callback(tagid);
+		}
+	});
+}
+
+function addTag(fileid, filename, tagname, editafter){
 	$.ajax({
 		url: OC.filePath('meta_data', 'ajax', 'updateFileInfo.php'),
 		async: false,
@@ -60,14 +222,23 @@ function addTag(fileid, filename, tagname){
 			tagname: tagname
 		},
 		type: "POST",
-		success: function(result) {
-			if(!result){
-				OC.dialogs.alert("Please define a 'Zenodo' schema.", "No metadata schema", function(res){}, true);
+		success: function(tagid) {
+			if(!tagid){
+				OC.dialogs.alert("Please define a '"+tagname+"' schema.", "No metadata schema", function(res){}, true);
+				return false;
 			}
-			else{
-				editMeta(metaPopupTitle, filename, fileid, result, styleMetaPopup, openZenodoAuth);
+			if(editafter){
+				if(tagname==='Zenodo'){
+					editMeta(metaPopupTitle, filename, fileid, tagid, styleMetaPopup, openZenodoAuth);
+				}
+				else if(tagname==='MediaCMS'){
+					editMeta(metaPopupTitle, filename, fileid, tagid, setMediaParams, publishMedia);
+				}
+				else if(tagname==='ScienceNotebooks'){
+					editMeta(metaPopupTitle, filename, fileid, tagid, setNotebookParams, publishNotebook);
+				}
 			}
-		},
+		}
 	});
 }
 
@@ -259,6 +430,61 @@ function setDepositData(){
 	$('#selectedClientSecret').val(clientSecrets[i].trim());
 }
 
+function metaPopup(filename, tr, tag){
+	if ($('#dropdown').length == 0) {
+		//$(html).appendTo($(tr).find('td.filename'));
+		$(tr).addClass('mouseOver');
+		var filename = $(tr).data('file');
+		var fileid = $(tr).data('id');
+		if(typeof editMeta !== 'undefined'){
+			var tagid = $(tr).find('span.tagtext').filter(function() { return ($(this).text()===tag) }).closest('.label').attr('data-tag');
+			if(typeof tagid == 'undefined' || !tagid.length){
+				addTag(fileid, filename, tag, true);
+			}
+			else{
+				if(tag==='Zenodo'){
+					editMeta(metaPopupTitle, filename, fileid, tagid, styleMetaPopup, openZenodoAuth);
+				}
+				else if(tag==='MediaCMS'){
+					editMeta(metaPopupTitle, filename, fileid, tagid, setMediaParams, publishMedia);
+				}
+				else if(tag==='ScienceNotebooks'){
+					editMeta(metaPopupTitle, filename, fileid, tagid, setNotebookParams, publishNotebook);
+				}
+			}
+		}
+		else{
+			OC.dialogs.alert('Please install and enable the app metadata.', 'No metadata', function(res){}, true);
+		}
+	}
+	else {
+		$("#dropdown").slideUp(200, function() {
+			$(this).remove();
+		});
+		$('tr').removeClass('mouseOver');
+	}
+}
+
+function publishCreateSelect(filename, mimeType, zenodoOnly, el, multiple){
+	var html = '<div id="publishAction" class="publishDrop'+(multiple?'':' filePublishSelect')+'">';
+	html +=
+'<select id="publishSelect">\
+	<option value="" disabled selected>'+t('files_zenodo', 'Select destination')+'</option>\
+	<option value="Zenodo">'+t('files_zenodo', 'Data repository (Zenodo)')+'</option>';
+	if(!zenodoOnly && mimeType.startsWith('video/')){
+		html += '<option value="MediaCMS">'+t('files_zenodo', 'Media platform (MediaCMS)')+'</option>';
+	}
+	if(!zenodoOnly && mimeType=='application/x-ipynb+json'){
+		html += '<option value="ScienceNotebooks">'+t('files_zenodo', 'Notebook repository (ScienceNotebooks)')+'</option>';;
+	}
+	html += '</select>';
+	html += '</div>';
+	$(html).appendTo(el);
+	$(html).find('option').css('font-weight', 'bold');
+	$(html).find('option.disabled').css('font-weight', 'lighter');
+	$(html).find('option').first().css('opacity', '.8');
+}
+
 $(document).ready(function() {
 	
 	$('body').prepend('<input type="hidden" id="selectedDepositBaseURL"></input>');
@@ -267,6 +493,8 @@ $(document).ready(function() {
 
 	getClient();
 	
+	addSelectedPublishAction();
+	
 	if (typeof FileActions !== 'undefined') {
 		// Register our function with ownCloud - files, not folders
 		FileActions.register(/*'file'*/'all', t('files_zenodo', 'Zenodo'), OC.PERMISSION_READ, OC.imagePath('files_zenodo', 'forward'),
@@ -274,34 +502,33 @@ $(document).ready(function() {
 				if (scanFiles.scanning) {
 					return;
 				}
-				if ($('#dropdown').length == 0) {
-					var tr = FileList.findFileEl(filename);
-					//$(html).appendTo($(tr).find('td.filename'));
-					$(tr).addClass('mouseOver');
-					var filename = $(tr).data('file');
-					var fileid = $(tr).data('id');
-					if(typeof editMeta !== 'undefined'){
-						var tagid = $(tr).find('span.tagtext').filter(function() { return ($(this).text() === 'Zenodo') }).closest('.label').attr('data-tag');
-						if(typeof tagid == 'undefined' || !tagid.length){
-							addTag(fileid, filename, 'Zenodo');
-						}
-						else{
-							editMeta(metaPopupTitle, filename, fileid, tagid, styleMetaPopup, openZenodoAuth);
-						}
-					}
-					else{
-						OC.dialogs.alert('Please install and enable the app metadata.', 'No metadata', function(res){}, true);
-					}
-				}
-				else {
-					$("#dropdown").slideUp(200, function() {
-						$(this).remove();
-					});
+				
+				var tr = FileList.findFileEl(filename);
+				
+				if (($('#publishAction').length > 0)) {
+					$('#publishAction').detach();
+					$('.ui-autocomplete').remove();
 					$('tr').removeClass('mouseOver');
+				}
+				else{
+					$(tr).addClass('mouseOver');
+					publishCreateSelect(filename, tr.attr('data-mime'), false, $(tr).find('td.filename'), false);
+					// appendTo runs synchronously, so we can just add action here
+					$('#publishSelect').on('change', function(ev){
+						metaPopup(filename, tr, $('#publishSelect').val());
+					});
 				}
 			}
 		);
 	}
+	
+	$(this).click(function(event){
+		if( !$(event.target).hasClass('ui-corner-all') && $(event.target).parents().index($('.ui-menu'))==-1 &&
+			!$(event.target).hasClass('publishDrop') && !$(event.target).is('#publishAction') &&
+			$(event.target).parents().index($('#publishAction'))==-1){
+			$('#publishAction').detach();
+		}
+	});
 
 	// Add action to top bar (visible when files are selected)
 	/*if(!$('.nav-sidebar li[data-id="sharing_in"] a.active').length &&

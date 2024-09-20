@@ -10,3 +10,54 @@ pb, .deposit_id {
     padding-top: 1px;
     margin-right: 5px;
 }
+
+#publishAction {
+  position: absolute;
+  left: 107px;
+  top: 44px;
+}
+
+#publishAction.filePublishSelect {
+  display:block;
+  right:0;
+  left: unset;
+  top: unset;
+  margin-right:7em;
+  padding:0.5em;
+  background:#eee;
+  border-left:1px solid #ccc;
+  border-right:1px solid #ccc;
+  border-bottom:1px solid #ccc;
+  border-bottom-right-radius:1em;
+  border-bottom-left-radius:1em;
+  z-index:100;
+}
+
+::before, ::after {
+  -webkit-box-sizing: border-box;
+
+  -moz-box-sizing: border-box;
+
+  box-sizing: border-box;
+
+}
+::before, ::after {
+  box-sizing: border-box;
+
+}
+::before, ::after {
+  box-sizing: border-box;
+
+}
+.url {
+  margin-right: 8px;
+  margin-left: 4px;
+  font-weight: bold;
+}
+
+div.msg {
+	display: inline-block;
+	margin-right: 24px;
+	font-weight: bold;
+}
+
