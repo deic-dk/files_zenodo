@@ -1,6 +1,8 @@
 <?php
 
 $fileid = $_POST['fileid'];
+$filename = $_POST['filename'];
+$group = $_POST['group'];
 $title = $_POST['title'];
 $description = $_POST['description'];
 $category = $_POST['category'];
@@ -67,8 +69,8 @@ $authKey = $response["token"];
 
 // Upload the video file
 
-$path = \OCA\FilesSharding\Lib::getFilePath($fileid);
-$full_path = \OC\Files\Filesystem::getLocalFile($path);
+$full_path = \OCA\FilesSharding\Lib::getFullPath($filename, '', $userID, $fileid, $group);
+
 \OCP\Util::writeLog('files_zenodo', 'Uploading '.$full_path.' to MediaCMS with credentials '.$userEmail.":".$authKey, \OC_Log::WARN);
 $cFile = curl_file_create($full_path);
 $curl = curlInit($apiURL.'/media');
@@ -87,17 +89,17 @@ curl_close($curl);
 
 if(empty($status['http_code']) || $status['http_code']===0 || $status['http_code']>=300 ||
 		$json_response===null || $json_response===false){
-			\OCP\Util::writeLog('files_sharding', 'ERROR: bad ws response from '.$url.' : '.
-					serialize($status).' : '.$json_response, \OC_Log::ERROR);
-			\OCP\JSON::error(array(
-					'status' => $status,
-			));
-			exit;
+	\OCP\Util::writeLog('files_zenodo', 'ERROR: bad ws response from '.$url.' : '.
+			serialize($status).' : '.$json_response, \OC_Log::ERROR);
+	\OCP\JSON::error(array(
+			'status' => $status,
+	));
+	exit;
 }
 
 OCP\JSON::encodedPrint(array(
-		'mediaURL' => $myMediaURL,
-		'i' => $i
+	'mediaURL' => $myMediaURL,
+	'i' => $i
 ));
 
 

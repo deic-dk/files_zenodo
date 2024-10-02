@@ -61,3 +61,12 @@ div.msg {
 	font-weight: bold;
 }
 
+.spacer {
+	margin-left: 26px;
+  margin-right: 26px;
+}
+
+.oc-dialog input.value.new_category {
+  width: unset;
+}
+

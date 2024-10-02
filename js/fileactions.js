@@ -79,13 +79,15 @@ function getClient(){
 	});
 }
 
-function publishMedia(fileid, filenames) {
+function publishMedia(fileid, filenames) { /*both can be multi-entry strings like file1:file2:file3*/
 	var title = $('#meta_data_container span.keyname:contains("Title")').parent().find('input.value').last().val();
 	var description = $('#meta_data_container span.keyname:contains("Description")').parent().find('input.value').last().val();
 	$('button.popup_ok').css('background-image', 'url('+ OC.imagePath('core', 'loading-small.gif') + ')').css('background-repeat', 'no-repeat').css('background-position', 'center center').css('opacity', '.6').css('cursor', 'default').off();
 	// Add message field
 	$('.ui-dialog-buttonset').prepend('<div class="msg"></div>')
 	var fileids = (''+fileid).split(':');
+	var tr = FileList.findFileEl(filenames[0]);
+	var group = tr.attr('data-group');
 	for(var i=0; i<fileids.length; ++i){
 		$('div.msg').text("Uploading "+filenames[i]+"...");
 		$.ajax({
@@ -94,6 +96,7 @@ function publishMedia(fileid, filenames) {
 			data: {
 				fileid: fileids[i],
 				filename: filenames[i],
+				group: group,
 				title: title,
 				description: description,
 				dataType: 'json',
@@ -111,52 +114,54 @@ function publishMedia(fileid, filenames) {
 					});
 				}
 			},
-			error: function(data) {
+			error: function(s, textStatus, errorThrown) {
 				$('button.popup_ok').css('background-image', '').css('opacity', '1.0').css('cursor', 'pointer').on();
-			},
+				OC.dialogs.alert(t("files_zenodo", "Publish: Something went wrong. "+errorThrown), t("files_zenodo", "Error"));
+			}
 		});
 	}
 }
 
-function setMediaParams(){
-	//var title = $('.ui-dialog .edit[value=Title]').parent().find('input.value').val();
-	$('.ui-dialog .popup_ok').after("<span class='url'>media.sciencedata.dk</span>");
-	$('.ui-dialog .popup_ok').text(t('files_zenodo', 'Next: Deposit to')+' ');
-}
-
-function setNotebookParams(){
-	//var title = $('.ui-dialog .edit[value=Title]').parent().find('input.value').val();
-	//alert(title);
-}
-
-function publishNotebook(fileid) {
-	var title = $('#meta_data_container span.keyname:contains("Title")').parent().find('input.value').last().val();
-	var description = $('#meta_data_container span.keyname:contains("Description")').parent().find('input.value').last().val();
-	var category = $('#meta_data_container span.keyname:contains("Category")').parent().find('input.value').last().val();
+function publishNotebook(fileid, filenames) { /*both can be multi-entry strings like file1:file2:file3*/
+	var category = $('#meta_data_container span.keyname:contains("Category")').parent().find('select.value').last().val();
 	$('button.popup_ok').css('background-image', 'url('+ OC.imagePath('core', 'loading-small.gif') + ')').css('background-repeat', 'no-repeat').css('background-position', 'center center').css('opacity', '.6').css('cursor', 'default').off();
-	$.ajax({
-		url: OC.filePath('files_zenodo', 'ajax', 'notebook_publish.php'),
-		async: true,
-		data: {
-			fileid: fileid,
-			filename: filename,
-			title: title,
-			description: description,
-			category: category
-		},
-		type: "POST",
-		success: function(data) {
-			$('button.popup_ok').css('background-image', '').css('opacity', '1.0').css('cursor', 'pointer').on();
-	    $('body').find('.ui-dialog').delay(2000)
-		  .queue(function (next) { 
-				$(this).remove();
-		    next(); 
-		  });
-		},
-		error: function(data) {
-			$('button.popup_ok').css('background-image', '').css('opacity', '1.0').css('cursor', 'pointer').on();
-		},
-	});
+	// Add message field
+	$('.ui-dialog-buttonset').prepend('<div class="msg"></div>')
+	var fileids = (''+fileid).split(':');
+	var tr = FileList.findFileEl(filenames[0]);
+	var group = tr.attr('data-group');
+	for(var i=0; i<fileids.length; ++i){
+		$('div.msg').text("Uploading "+filenames[i]+"...");
+		$.ajax({
+			url: OC.webroot+'/remote.php/notebooks',
+			async: false,
+			data: {
+				action: 'publish',
+				fileid: fileids[i],
+				filename: filenames[i],
+				group: group,
+				section: category,
+				dataType: 'json',
+				i: (''+(i+1))
+			},
+			type: "POST",
+			success: function(data) {
+				if(parseInt(data['i'])==fileids.length){
+			    $('div.msg').text("All done.");
+					$('button.popup_ok').css('background-image', '').css('opacity', '1.0').css('cursor', 'pointer').on();
+					$('body').find('.ui-dialog').delay(2000)
+					.queue(function (next) { 
+						$(this).remove();
+						next(); 
+					});
+				}
+			},
+			error: function(s, textStatus, errorThrown) {
+				$('button.popup_ok').css('background-image', '').css('opacity', '1.0').css('cursor', 'pointer').on();
+				OC.dialogs.alert(t("files_zenodo", "Publish: Something went wrong. "+errorThrown), t("files_zenodo", "Error"));
+			}
+		});
+	}
 }
 
 function openZenodoAuth(fileid, filenames) {
@@ -179,6 +184,24 @@ function openZenodoAuth(fileid, filenames) {
 		}
 	}
  }
+
+function setMediaParams(){
+	//var title = $('.ui-dialog .edit[value=Title]').parent().find('input.value').val();
+	$('.ui-dialog .popup_ok').after("<span class='url'>media.sciencedata.dk</span>");
+	$('.ui-dialog .popup_ok').text(t('files_zenodo', 'Next: Deposit to')+' ');
+}
+
+function setNotebookParams(){
+	$('.ui-dialog .popup_ok').after("<span class='url'>sciencenotebooks.dk</span>");
+	$('.ui-dialog .popup_ok').text(t('files_zenodo', 'Next: Deposit to')+' ');
+	//$('div#meta_data_container ul li span:contains("Category")').first().parent().append('<span class="spacer">&hellip; or &hellip;</span><input class="value new_category" type="text" value="" placeholder= "Create new" title="Create new category"></input');
+	$('#meta_data_container span.keyname:contains("Category")').parent().find('select.value').last().on('change', function(ev){
+		$('#meta_data_container span.keyname:contains("Category")').parent().find('input.value').last().val('');
+	});
+	$('#meta_data_container span.keyname:contains("Category")').parent().find('input.value').last().on('input', function(ev){
+		$('#meta_data_container span.keyname:contains("Category")').parent().find('select.value').last().val('');
+	});
+}
 
 function doOpenZenodoAuth(fileid, baseURL, myClientAppID, myClientSecret){
 	if(!clientAppID){
@@ -467,16 +490,11 @@ function metaPopup(filename, tr, tag){
 
 function publishCreateSelect(filename, mimeType, zenodoOnly, el, multiple){
 	var html = '<div id="publishAction" class="publishDrop'+(multiple?'':' filePublishSelect')+'">';
-	html +=
-'<select id="publishSelect">\
-	<option value="" disabled selected>'+t('files_zenodo', 'Select destination')+'</option>\
-	<option value="Zenodo">'+t('files_zenodo', 'Data repository (Zenodo)')+'</option>';
-	if(!zenodoOnly && mimeType.startsWith('video/')){
-		html += '<option value="MediaCMS">'+t('files_zenodo', 'Media platform (MediaCMS)')+'</option>';
-	}
-	if(!zenodoOnly && mimeType=='application/x-ipynb+json'){
-		html += '<option value="ScienceNotebooks">'+t('files_zenodo', 'Notebook repository (ScienceNotebooks)')+'</option>';;
-	}
+	html += '<select id="publishSelect">';
+	html += '<option value="" disabled selected>'+t('files_zenodo', 'Select destination')+'</option>';
+	html +='<option value="Zenodo">'+t('files_zenodo', 'Data repository (Zenodo)')+'</option>';
+	html += '<option value="MediaCMS"'+((!zenodoOnly && mimeType.startsWith("video/"))?'':' disabled')+'>'+t('files_zenodo', 'Media platform (MediaCMS)')+'</option>';
+	html += '<option value="ScienceNotebooks"'+((!zenodoOnly && mimeType=="application/x-ipynb+json")?'':' disabled')+'>'+t('files_zenodo', 'Notebook demos (ScienceNotebooks)')+'</option>';;
 	html += '</select>';
 	html += '</div>';
 	$(html).appendTo(el);
