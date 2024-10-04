@@ -116,7 +116,7 @@ function publishMedia(fileid, filenames) { /*both can be multi-entry strings lik
 			},
 			error: function(s, textStatus, errorThrown) {
 				$('button.popup_ok').css('background-image', '').css('opacity', '1.0').css('cursor', 'pointer').on();
-				OC.dialogs.alert(t("files_zenodo", "Publish: Something went wrong. "+errorThrown), t("files_zenodo", "Error"));
+				OC.dialogs.alert(t("files_zenodo", "Publish: Something went wrong. Please make sure you have already logged in on media.sciencedata.dk"+errorThrown), t("files_zenodo", "Error"));
 			}
 		});
 	}
