@@ -15,7 +15,7 @@ $password = OC_Appconfig::getValue('files_zenodo', 'mediaCmsToken');
 $baseurl = OC_Appconfig::getValue('files_zenodo', 'mediaCmsURL', 'https://media.sciencedata.dk');
 
 $apiURL  = $baseurl.'/api/v1';
-$myMediaURL  = $baseurl.'/user/'+$userID;
+$myMediaURL  = $baseurl.'/user/'.$userID;
 
 $userEmail = \OCP\Config::getUserValue($userID, 'settings', 'email');
 
@@ -35,14 +35,14 @@ function curlInit($url){
 			"Accept-Charset: utf-8,windows-1251;q=0.7,*;q=0.7", "Pragma: no-cache",
 			"Cache-Control: no-cache", "Connection: Close", "User-Agent: ScienceData");
 	curl_setopt($ch, CURLOPT_HTTPHEADER, $headerArray);
-	curl_setopt($ch, CURLOPT_NOBODY, $head);
+	//curl_setopt($ch, CURLOPT_NOBODY, true);
 	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 120);
 	curl_setopt($ch, CURLOPT_TIMEOUT, 120);
 	return $ch;
 }
 
 $curl = curlInit($apiURL.'/login');
-curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC ) ;
+curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC) ;
 curl_setopt($curl, CURLOPT_USERPWD, $userEmail.":".$password);
 curl_setopt($curl, CURLOPT_POST, true);
 curl_setopt($curl, CURLOPT_HEADER, false);
@@ -53,11 +53,11 @@ curl_close($curl);
 
 if(empty($status['http_code']) || $status['http_code']===0 || $status['http_code']>=300 ||
 		$json_response===null || $json_response===false){
-	\OCP\Util::writeLog('files_sharding', 'ERROR: bad ws response from '.$url.' : '.
+			\OCP\Util::writeLog('files_sharding', 'ERROR: bad ws response from '.$apiURL.'/login'.' : '.
+			serialize(array('email'=>$userEmail, 'password'=>$password)).' : '.
 			serialize($status).' : '.$json_response, \OC_Log::ERROR);
-	\OCP\JSON::error(array(
-			'status' => $status,
-	));
+	header('HTTP/1.0 401 Unauthorized');
+	\OCP\JSON::error(array('message' => $json_response));
 	exit;
 }
 
@@ -91,15 +91,14 @@ if(empty($status['http_code']) || $status['http_code']===0 || $status['http_code
 		$json_response===null || $json_response===false){
 	\OCP\Util::writeLog('files_zenodo', 'ERROR: bad ws response from '.$url.' : '.
 			serialize($status).' : '.$json_response, \OC_Log::ERROR);
-	\OCP\JSON::error(array(
-			'status' => $status,
-	));
+	header('HTTP/1.0 401 Unauthorized');
+	\OCP\JSON::error(array('message' => $json_response));
 	exit;
 }
 
 OCP\JSON::encodedPrint(array(
 	'mediaURL' => $myMediaURL,
-	'i' => $i
+	'i' => ($i + 1)
 ));
 
 

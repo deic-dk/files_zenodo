@@ -39,7 +39,7 @@ function publishMultiple(event){
 				if(typeof tagid == 'undefined' || !tagid.length){
 					addTag(files[i].id, files[i].name, tagname, false);
 				}
-			}
+			};
 		getTagID(tagname,
 			function(tagid){
 			if(tagname==='Zenodo'){
@@ -79,6 +79,8 @@ function getClient(){
 	});
 }
 
+window.publishMediaContinue = true;
+
 function publishMedia(fileid, filenames) { /*both can be multi-entry strings like file1:file2:file3*/
 	var title = $('#meta_data_container span.keyname:contains("Title")').parent().find('input.value').last().val();
 	var description = $('#meta_data_container span.keyname:contains("Description")').parent().find('input.value').last().val();
@@ -88,38 +90,52 @@ function publishMedia(fileid, filenames) { /*both can be multi-entry strings lik
 	var fileids = (''+fileid).split(':');
 	var tr = FileList.findFileEl(filenames[0]);
 	var group = tr.attr('data-group');
-	for(var i=0; i<fileids.length; ++i){
-		$('div.msg').text("Uploading "+filenames[i]+"...");
-		$.ajax({
-			url: OC.filePath('files_zenodo', 'ajax', 'mediacms_publish.php'),
-			async: true,
-			data: {
-				fileid: fileids[i],
-				filename: filenames[i],
-				group: group,
-				title: title,
-				description: description,
-				dataType: 'json',
-				i: (''+(i+1))
-			},
-			type: "POST",
-			success: function(data) {
-				if(parseInt(data['i'])==fileids.length){
-			    $('div.msg').text("All done.");
-					$('button.popup_ok').css('background-image', '').css('opacity', '1.0').css('cursor', 'pointer').on();
-					$('body').find('.ui-dialog').delay(2000)
-					.queue(function (next) { 
-						$(this).remove();
-						next(); 
-					});
-				}
-			},
-			error: function(s, textStatus, errorThrown) {
-				$('button.popup_ok').css('background-image', '').css('opacity', '1.0').css('cursor', 'pointer').on();
-				OC.dialogs.alert(t("files_zenodo", "Publish: Something went wrong. Please make sure you have already logged in on media.sciencedata.dk"+errorThrown), t("files_zenodo", "Error"));
-			}
-		});
+	var totalUploads = fileids.length;
+	window.publishMediaContinue = true;
+	$('button.popup_cancel').click(function(ev){
+		window.publishMediaContinue = false;
+	});
+	uploadMedia(fileids, filenames, group, title, description, 0, totalUploads);
+}
+
+function uploadMedia(fileids, filenames, group, title, description, i, totalUploads){
+	if(!window.publishMediaContinue){
+		return;
 	}
+	$('div.msg').text("Uploading "+filenames[i]+"...");
+	$.ajax({
+		url: OC.filePath('files_zenodo', 'ajax', 'mediacms_publish.php'),
+		async: true,
+		data: {
+			fileid: fileids[i],
+			filename: filenames[i],
+			group: group,
+			title: title,
+			description: description,
+			dataType: 'json',
+			i: i
+		},
+		type: "POST",
+		success: function(data) {
+			i = parseInt(data['i']);
+			if(i==totalUploads){
+				$('div.msg').text("All done.");
+				$('button.popup_ok').css('background-image', '').css('opacity', '1.0').css('cursor', 'pointer').on();
+				$('body').find('.ui-dialog').delay(4000).queue(function (next) {
+					$(this).remove();
+					next(); 
+				});
+			}
+			else{
+				uploadMedia(fileids, filenames, group, title, description, i, totalUploads);
+			}
+		},
+		error: function(s, textStatus, errorThrown) {
+			totalUploads = totalUploads - 1;
+			$('button.popup_ok').css('background-image', '').css('opacity', '1.0').css('cursor', 'pointer').on();
+			OC.dialogs.alert(t("files_zenodo", "Publish: Something went wrong uploading "+filenames[i]+". Please make sure you have already logged in on media.sciencedata.dk. "+errorThrown), t("files_zenodo", "Error"));
+		}
+	});
 }
 
 function publishNotebook(fileid, filenames) { /*both can be multi-entry strings like file1:file2:file3*/
@@ -222,13 +238,13 @@ function doOpenZenodoAuth(fileid, baseURL, myClientAppID, myClientSecret){
 
 function getTagID(tagname, callback){
 	$.ajax({
-		url: OC.filePath('meta_data', 'ajax', 'updateFileInfo.php'),
+		url: OC.filePath('meta_data', 'ajax', 'getTagID.php'),
 		async: false,
 		timeout: 200,
 		data: {
 			tagname: tagname
 		},
-		type: "POST",
+		type: "GET",
 		success: function(tagid) {
 			callback(tagid);
 		}
