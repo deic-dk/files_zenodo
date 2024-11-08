@@ -12,6 +12,14 @@ $i = $_POST['i'];
 $userID  = OCP\User::getUser();
 // Users on media.sciencedata.dk cannot log in with username/password - they don't know their password
 $password = OC_Appconfig::getValue('files_zenodo', 'mediaCmsToken');
+//  System users have their own passwords - see if one is defined for this user in the config file.
+// It has to match the password of the user on media.sciencedata.dk
+$mediacmsPasswords = OC_Config::getValue('mediacms_passwords', '');
+if(!empty($mediacmsPasswords)){
+	if(!empty($mediacmsPasswords[$userID])){
+		$password = $mediacmsPasswords[$userID];
+	}
+}
 $baseurl = OC_Appconfig::getValue('files_zenodo', 'mediaCmsURL', 'https://media.sciencedata.dk');
 
 $apiURL  = $baseurl.'/api/v1';
