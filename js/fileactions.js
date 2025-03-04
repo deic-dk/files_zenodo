@@ -60,7 +60,7 @@ function publishMultiple(event){
 function addSelectedPublishAction(){
 	$('#headerName .selectedActions').each(function(){
 		if(!$(this).find('.publish').length){
-			$('<a class="publish btn btn-xs btn-default" href=""><i class="icon icon-forward"></i>'+t('files_zenodo',' Publish')+'</a>').prependTo($(this));
+			$('<a class="publish btn btn-xs btn-default" href=""><i class="icon icon-forward"></i>'+t('files_zenodo',' Publish')+'</a>&nbsp;').prependTo($(this));
 			$(this).find('.publish').click(publishMultiple)
 		}
 	});
