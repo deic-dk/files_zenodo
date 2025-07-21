@@ -635,12 +635,16 @@ function showEpubViewer(dir, file, id, owner, group){
 			$('#epubframe #close').click(function(){
 				rendition.destroy();
 				$('div#epubframe').remove();
+				var view;
 				if(typeof FileList!=='undefined'){
 					view = FileList.getGetParam('view');
-					if(view=='' || view=='files'|| view=='sharingin'){
-						$('#app-content-files.viewcontainer.inuse').removeClass('hidden');
-						$('#app-content-sharingin.viewcontainer.inuse').removeClass('hidden');
-					}
+				}
+				if(view=='' || view=='files'|| view=='sharingin'){
+					$('#app-content-files.viewcontainer.inuse').removeClass('hidden').removeClass('inuse');
+					$('#app-content-sharingin.viewcontainer.inuse').removeClass('hidden').removeClass('inuse');
+					var dirref = OC.linkTo('files', 'index.php') + '?dir=' + dir + (view&&view!=''?'&view='+view:'');
+					window.history.pushState( {service: 'files',  dir: dir}, '', dirref);
+					//window.history.back();
 				}
 				$('#app-content-public #preview').removeClass('hidden');
 			});
@@ -650,8 +654,12 @@ function showEpubViewer(dir, file, id, owner, group){
 			$('#app-content-files.viewcontainer:visible').addClass('hidden').addClass('inuse');
 			$('#app-content-sharingin.viewcontainer:visible').addClass('hidden').addClass('inuse');
 			$('#app-content-public #preview').addClass('hidden');
-			var ref = OC.linkTo('files', 'index.php') + '?dir=' + dir + '&file=' + file;
-			if(view=='files'|| view=='sharingin'){
+			var view;
+			if(typeof FileList!=='undefined'){
+				view = FileList.getGetParam('view');
+			}
+			if(view=='' || view=='files'|| view=='sharingin'){
+				var ref = OC.linkTo('files', 'index.php') + '?dir=' + dir + '&file=' + file + (view&&view!=''?'&view='+view:'');
 				window.history.pushState( {service: 'files', file: path}, '', ref);
 			}
 		});
