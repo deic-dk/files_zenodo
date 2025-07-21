@@ -70,3 +70,34 @@ div.msg {
   width: unset;
 }
 
+#epubframe {
+	height: 600px;
+}
+
+#epubbar .navlink {
+	font-size: 20px;
+}
+
+a.hlink:hover {
+	text-decoration: none;
+}
+
+#epubframe #epubbar {
+	z-index: 2;
+	position: fixed;
+}
+
+#epubframe #TOC {
+	z-index: 2;
+	position: fixed;	display: block;background: #222;
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 4px;
+	opacity: 0.8;
+	padding: 8px;
+}
+
+#epubframe iframe {
+	margin-top: 20px;
+}
+

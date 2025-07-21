@@ -519,6 +519,134 @@ function publishCreateSelect(filename, mimeType, zenodoOnly, el, multiple){
 	$(html).find('option').first().css('opacity', '.8');
 }
 
+function loadScript(url, callback) {
+	var script = document.createElement("script")
+	script.type = "text/javascript";
+	if(script.readyState){ //IE
+		script.onreadystatechange = function () {
+			if (script.readyState == "loaded" || script.readyState == "complete") {
+				script.onreadystatechange = null;
+				if(callback){
+					callback();
+				}
+			}
+		}
+	}
+	else{ //Others
+		script.onload = function () {
+			if(callback){
+				callback();
+			}
+		}
+	}
+	script.src = url;
+	document.getElementsByTagName("head")[0].appendChild(script);
+}
+
+function showEpubViewer(dir, file, id, owner, group){
+	if(typeof FileList !== 'undefined'){
+		FileList.showMask();
+	}
+	if(typeof OCA.Files.App.fileList.getGroup !== 'undefined'){
+		group = OCA.Files.App.fileList.getGroup();
+	}
+	var path = dir+'/'+file;
+	var epubSrc = OC.webroot+'/themes/deic_theme_oc7/apps/files/ajax/download.php?'+'dir='+
+		dir+
+		(group?'&group='+encodeURIComponent(group):'')+
+		(id?'&id='+id:'')+(owner?'&owner='+owner:'')+
+		'&files='+encodeURIComponent(file);
+	epubframe = $('<div id="epubframe"><div id="epubbar">\
+		<a class="hlink navlink" id="close" title="'+t('files_zenodo', 'Close')+'">&#10006;</a>\
+		<a class="hlink navlink" id="toc" title="'+t('files_zenodo', 'TOC')+'">&#9776;</a>\
+		<a class="hlink navlink" id="prev" title="'+t('files_zenodo', 'Next page')+'">&larr;</a>\
+		<a class="hlink navlink" id="next" title="'+t('files_zenodo', 'Previous page')+'">&rarr;</a>\
+		<div id="TOC"><ul></ul></div>\
+	</div>');
+	var appcontent = '';
+	if($('#app-content').length){
+		appcontent = '#app-content';
+	}
+	else if($('#app-content-public').length){
+		appcontent = '#app-content-public';
+	}
+	else{
+		return false;
+	}
+	$.when($(appcontent).append(epubframe)).then(
+		function(){
+			loadScript(OC.webroot+'/apps/files_zenodo/js/jszip.js');
+			loadScript(OC.webroot+'/apps/files_zenodo/js/epub.js', function(){
+				var book = ePub(epubSrc);
+				var rendition = book.renderTo("epubframe", {method: "default", width: "100%", height:  600, ignoreClass: 'annotator-hl',
+					flow: "paginated"});
+				rendition.display();
+			// Navigation loaded
+			book.loaded.navigation.then(function(toc){
+				//console.log(toc);
+				for(var i=0; i<toc.toc.length; i++) {
+					$('#TOC ul').append('<li><a class="toclink hlink" href="'+toc.toc[i].href+'">'+toc.toc[i].label+'</a></li>')
+				}
+				$("#TOC").hide();
+				$('a.toclink').click(function(ev) {
+					ev.preventDefault();
+					ev.stopPropagation();
+					rendition.display($(this).attr('href'));
+					return false;
+				});
+			});
+			// Navigation
+			$("#epubframe #next").click(function(){
+				rendition.next();
+			});
+			 $("#epubframe #prev").click(function(){
+				rendition.prev();
+			});
+			$("#epubframe #toc").click(function(){
+				$("#TOC").toggle();
+			});
+			var keyListener = function(e){
+				// Left Key
+				if ((e.keyCode || e.which) == 37) {
+				rendition.prev();
+				}
+				// Right Key
+				if ((e.keyCode || e.which) == 39) {
+				rendition.next();
+				}
+			};
+			rendition.on("keyup", keyListener);
+			document.addEventListener("keyup", keyListener, false);
+			rendition.on("relocated", function(location){
+				$('.epub-view').css('height', '600px');
+				console.log(location);
+			});
+			//rendition.themes.default({ ".blue": { "color": "#0376a3!important"}})
+			//rendition.themes.default(OC.webroot+"/themes/deic_theme_oc7/core/css/styles.css");
+			//rendition.themes.default(OC.webroot+"/themes/deic_theme_oc7/core/css/deic-icons.css");
+			rendition.themes.default(OC.webroot+"/themes/deic_theme_oc7/core/css/dark-theme.css");
+			//rendition.themes.default(OC.webroot+"/apps/files_zenodo/css/style.css");
+			$("#epubframe")[0].scrollIntoView();
+			$('#epubframe #close').click(function(){
+				rendition.destroy();
+				$('div#epubframe').remove();
+				if(typeof FileList!=='undefined'){
+					view = FileList.getGetParam('view');
+					if(view=='' || view=='files'){
+						$('#app-content-files.viewcontainer').removeClass('hidden');
+					}
+				}
+				$('#app-content-public #preview').removeClass('hidden');
+			});
+			if(typeof FileList !== 'undefined'){
+				FileList.hideMask();
+			}
+			$('#app-content-files.viewcontainer').addClass('hidden');
+			$('#app-content-public #preview').addClass('hidden');
+		});
+	});
+}
+
 $(document).ready(function() {
 	
 	$('body').prepend('<input type="hidden" id="selectedDepositBaseURL"></input>');
@@ -554,6 +682,15 @@ $(document).ready(function() {
 				}
 			}
 		);
+		
+		/// EPUB
+		if (OCA.Files) {
+			OCA.Files.fileActions.register('application/epub+zip', 'View', OC.PERMISSION_READ, '', function (filename, context) {
+				showEpubViewer(context.dir, filename, context.id, context.owner);
+			});
+			OCA.Files.fileActions.setDefault('application/epub+zip', 'View');
+		}
+		
 	}
 	
 	$(this).click(function(event){
@@ -571,4 +708,15 @@ $(document).ready(function() {
 		$('#headerName .selectedActions').prepend(
 			'<a class="zenodo btn btn-xs btn-default" id="zenodo" href=""><i class="icon icon-forward"></i>' + t('files_zenodo', ' Publish') + '</a>&nbsp;');
 	}*/
+	
+	$(document).click(function(e){
+		// Hide EPUB TOC if shown and clicking outside it - works only for clicks outside the EPUB iframe---
+		if(!$(e.target).is($('#TOC')) && !$(e.target).is($('#toc')) &&
+				!$(e.target).parents().filter('#TOC').length &&
+				!$(e.target).parents().filter('#toc').length) {
+			$('#TOC').hide();
+			return false;
+		}
+	});
+	
 });
