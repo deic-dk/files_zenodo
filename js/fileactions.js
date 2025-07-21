@@ -715,7 +715,6 @@ $(document).ready(function() {
 				!$(e.target).parents().filter('#TOC').length &&
 				!$(e.target).parents().filter('#toc').length) {
 			$('#TOC').hide();
-			return false;
 		}
 	});
 	
