@@ -619,13 +619,17 @@ function showEpubViewer(dir, file, id, owner, group){
 			document.addEventListener("keyup", keyListener, false);
 			rendition.on("relocated", function(location){
 				$('.epub-view').css('height', '600px');
-				console.log(location);
+				//console.log(location);
+				var cssLink = document.createElement("link");
+				cssLink.href = OC.webroot+'/apps/files_zenodo/css/style.css'; 
+				cssLink.rel = "stylesheet"; 
+				cssLink.type = "text/css"; 
+				window.frames[0].document.head.appendChild(cssLink);
+				$(window.frames[0]).on("mousedown, mouseup, click", function(){
+					$('#TOC').hide();
+				});
 			});
-			//rendition.themes.default({ ".blue": { "color": "#0376a3!important"}})
-			//rendition.themes.default(OC.webroot+"/themes/deic_theme_oc7/core/css/styles.css");
-			//rendition.themes.default(OC.webroot+"/themes/deic_theme_oc7/core/css/deic-icons.css");
 			rendition.themes.default(OC.webroot+"/themes/deic_theme_oc7/core/css/dark-theme.css");
-			//rendition.themes.default(OC.webroot+"/apps/files_zenodo/css/style.css");
 			$("#epubframe")[0].scrollIntoView();
 			$('#epubframe #close').click(function(){
 				rendition.destroy();
@@ -717,5 +721,5 @@ $(document).ready(function() {
 			$('#TOC').hide();
 		}
 	});
-	
+
 });

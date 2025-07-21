@@ -89,7 +89,9 @@ a.hlink:hover {
 
 #epubframe #TOC {
 	z-index: 2;
-	position: fixed;	display: block;background: #222;
+	position: fixed;
+	display: block;
+	background: #eee;
 	border-style: solid;
 	border-width: 1px;
 	border-radius: 4px;
@@ -99,5 +101,9 @@ a.hlink:hover {
 
 #epubframe iframe {
 	margin-top: 20px;
+}
+
+.blue {
+  color: #0376a3!important;
 }
 
