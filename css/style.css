@@ -71,7 +71,7 @@ div.msg {
 }
 
 #epubframe {
-	height: 600px;
+	height: 800px;
 }
 
 #epubbar .navlink {
@@ -85,6 +85,11 @@ a.hlink:hover {
 #epubframe #epubbar {
 	z-index: 2;
 	position: fixed;
+}
+
+#header #epubframe #epubbar {
+	top: 16px;
+	left: 124px;
 }
 
 #epubframe #TOC {
@@ -105,5 +110,9 @@ a.hlink:hover {
 
 .blue {
   color: #0376a3!important;
+}
+
+body#body-public header div#header #epubbar {
+  line-height: 1.4em;
 }
 

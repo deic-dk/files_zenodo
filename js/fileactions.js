@@ -232,7 +232,7 @@ function doOpenZenodoAuth(fileid, baseURL, myClientAppID, myClientSecret){
 		"redirect_uri="+redirectUrl+"&response_type=token&state="+fileids[i];
 		$('body').find('.ui-dialog').remove();
 		oauthWindow = window.open(url, "_blank", 
-			"toolbar=no, scrollbars=yes, width=620, height=600, top=500, left=500");
+			"toolbar=no, scrollbars=yes, width=620, height=800, top=500, left=500");
 	}
 }
 
@@ -563,12 +563,13 @@ function showEpubViewer(dir, file, id, owner, group){
 		<a class="hlink navlink" id="next" title="'+t('files_zenodo', 'Previous page')+'">&rarr;</a>\
 		<div id="TOC"><ul></ul></div>\
 	</div>');
+	var path = dir+'/'+file;
 	var appcontent = '';
 	if($('#app-content').length){
 		appcontent = '#app-content';
 	}
 	else if($('#app-content-public').length){
-		appcontent = '#app-content-public';
+		appcontent = 'header>#header';
 	}
 	else{
 		return false;
@@ -578,7 +579,7 @@ function showEpubViewer(dir, file, id, owner, group){
 			loadScript(OC.webroot+'/apps/files_zenodo/js/jszip.js');
 			loadScript(OC.webroot+'/apps/files_zenodo/js/epub.js', function(){
 				var book = ePub(epubSrc);
-				var rendition = book.renderTo("epubframe", {method: "default", width: "100%", height:  600, ignoreClass: 'annotator-hl',
+				var rendition = book.renderTo("epubframe", {method: "default", width: "100%", height:  800, ignoreClass: 'annotator-hl',
 					flow: "paginated"});
 				rendition.display();
 			// Navigation loaded
@@ -618,7 +619,7 @@ function showEpubViewer(dir, file, id, owner, group){
 			rendition.on("keyup", keyListener);
 			document.addEventListener("keyup", keyListener, false);
 			rendition.on("relocated", function(location){
-				$('.epub-view').css('height', '600px');
+				$('.epub-view').css('height', '800px');
 				//console.log(location);
 				var cssLink = document.createElement("link");
 				cssLink.href = OC.webroot+'/apps/files_zenodo/css/style.css'; 
@@ -636,8 +637,9 @@ function showEpubViewer(dir, file, id, owner, group){
 				$('div#epubframe').remove();
 				if(typeof FileList!=='undefined'){
 					view = FileList.getGetParam('view');
-					if(view=='' || view=='files'){
-						$('#app-content-files.viewcontainer').removeClass('hidden');
+					if(view=='' || view=='files'|| view=='sharingin'){
+						$('#app-content-files.viewcontainer.inuse').removeClass('hidden');
+						$('#app-content-sharingin.viewcontainer.inuse').removeClass('hidden');
 					}
 				}
 				$('#app-content-public #preview').removeClass('hidden');
@@ -645,8 +647,13 @@ function showEpubViewer(dir, file, id, owner, group){
 			if(typeof FileList !== 'undefined'){
 				FileList.hideMask();
 			}
-			$('#app-content-files.viewcontainer').addClass('hidden');
+			$('#app-content-files.viewcontainer:visible').addClass('hidden').addClass('inuse');
+			$('#app-content-sharingin.viewcontainer:visible').addClass('hidden').addClass('inuse');
 			$('#app-content-public #preview').addClass('hidden');
+			var ref = OC.linkTo('files', 'index.php') + '?dir=' + dir + '&file=' + file;
+			if(view=='files'|| view=='sharingin'){
+				window.history.pushState( {service: 'files', file: path}, '', ref);
+			}
 		});
 	});
 }
@@ -694,7 +701,9 @@ $(document).ready(function() {
 			});
 			OCA.Files.fileActions.setDefault('application/epub+zip', 'View');
 		}
-		
+		$('#app-content-public #imgframe img.publicpreview.epub').click(function(){
+			showEpubViewer($('#dir').val(), $('#filename').val(), $('#fileid').val(), $('#owner').val());
+		});
 	}
 	
 	$(this).click(function(event){
@@ -721,5 +730,18 @@ $(document).ready(function() {
 			$('#TOC').hide();
 		}
 	});
+	
+	$(window).on('popstate', function() {
+		$('#epubframe').remove();
+		$('#epubbar').remove();
+		if(typeof FileList!=='undefined' && FileList.getGetParam){
+			view = FileList.getGetParam('view');
+			if(view=='' || view=='files' || view=='sharingin'){
+				$('#app-content-files.viewcontainer.inuse').removeClass('hidden');
+				$('#app-content-sharingin.viewcontainer.inuse').removeClass('hidden');
+			}
+		}
+		$('#app-content-public #preview').removeClass('hidden');
+  });
 
 });
