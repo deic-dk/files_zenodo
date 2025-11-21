@@ -341,7 +341,7 @@ function styleMetaPopup(fileid, filename) {
 			userAffiliationSpan = userAffiliationI.parent().find('span');
 		}
 		var userAffiliation = '';
-		if(userAffiliationSpan.length){
+		if(userAffiliationSpan && userAffiliationSpan.length){
 			userAffiliation = userAffiliationSpan.first().text();
 		}
 		
